@@ -25,6 +25,7 @@ namespace GeradorFormulario.Core
 
             html.AppendLine("<!DOCTYPE html><html lang=\"pt-br\"><head>");
             html.AppendLine("  <meta charset=\"UTF-8\">");
+            html.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
             html.AppendLine($"  <title>{definicao.NomeFormulario}</title>");
             html.AppendLine("  <style>");
             html.AppendLine(GerarCss(definicao.CorPrincipal)); // Passa a cor
@@ -311,6 +312,59 @@ namespace GeradorFormulario.Core
                   font-size: 0.875em;
                   margin-top: 5px;
                 }
+
+                @media (max-width: 425px) {
+                  
+                  body {
+                    margin: 0; /* Remove margens no celular */
+                  }
+
+                  .form-container {
+                    padding: 15px; /* Padding menor */
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  /* Empilha o cabeçalho no celular */
+                  .form-header {
+                    flex-direction: column; /* Empilha o logo e o texto */
+                    align-items: center;    /* Centraliza */
+                    gap: 15px;
+                  }
+
+                  .form-title {
+                    text-align: center; /* Centraliza o título no celular */
+                  }
+                  
+                  .form-subtitle-box {
+                    text-align: center;
+                  }
+
+                  /* Empilha as colunas (CPF/RG, Bairro/Cidade/CEP) */
+                  .form-row {
+                    flex-direction: column; /* Empilha os campos */
+                    gap: 0; /* Remove o gap, já que estão um sobre o outro */
+                  }
+                  
+                  /* O 'style="flex: X;"' não afeta a direção de coluna, 
+                     então os campos naturalmente ocupam 100% da largura. */
+
+                  /* Ajuste no título da seção para mobile */
+                  .form-section {
+                    padding: 20px 15px;
+                  }
+                  
+                  .form-section-title {
+                    margin-top: 0;
+                    margin-left: 0;
+                    margin-bottom: 20px;
+                    display: block; /* Vira um bloco normal */
+                    width: 100%;
+                    background: transparent;
+                    border-bottom: 2px solid {{corPrincipal}};
+                    padding-bottom: 5px;
+                  }
+
                 """;
         }
         private string GerarScriptsJavaScript(bool cpf, bool data, bool celular, bool email)
