@@ -162,7 +162,7 @@ namespace GeradorFormulario.Core.Fabrica
                 Nome = "sexoBiologico",
                 Rotulo = "Sexo Biológico",
                 Obrigatorio = true,
-                Opcoes = new List<string> { "Masculino", "Feminino", "Outro" }
+                Opcoes = new List<string> { "", "Masculino", "Feminino", "Outro" }
             };
         }
         public static CampoFormulario CriarIdentidadeDegenero()
@@ -182,7 +182,7 @@ namespace GeradorFormulario.Core.Fabrica
                 Nome = "estadoCivil",
                 Rotulo = "Estado Civil",
                 Obrigatorio = true,
-                Opcoes = new List<string> { "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)", "União Estável" }
+                Opcoes = new List<string> { "" , "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)", "União Estável" }
             };
         }
         public static CampoFormulario CriarEndereco()

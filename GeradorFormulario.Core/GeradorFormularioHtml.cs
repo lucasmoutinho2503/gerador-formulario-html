@@ -125,6 +125,11 @@ namespace GeradorFormulario.Core
                                     html.AppendLine($"        <select id='{campo.Nome}' name='{campo.Nome}'{requiredAttr} {controlClass} {validacaoAttr}>");
                                     foreach (var opcao in campo.Opcoes)
                                     {
+                                        if (string.IsNullOrEmpty(opcao))
+                                        {
+                                            html.AppendLine("          <option value='' selected hidden >Selecione...</option>");
+                                            continue;
+                                        }
                                         html.AppendLine($"          <option value='{opcao.ToLower()}'>{opcao}</option>");
                                     }
                                     html.AppendLine("        </select>");
