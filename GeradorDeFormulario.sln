@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorDeFormulario.Teste", "GeradorDeFormulario.Teste\GeradorDeFormulario.Teste.csproj", "{CE6AA684-98C7-41B4-B393-3AAD725AD645}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorFormulario.Core", "GeradorFormulario.Core\GeradorFormulario.Core.csproj", "{3DD07633-5F58-414D-9F1F-BCF95EBCBAC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE6AA684-98C7-41B4-B393-3AAD725AD645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6AA684-98C7-41B4-B393-3AAD725AD645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6AA684-98C7-41B4-B393-3AAD725AD645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6AA684-98C7-41B4-B393-3AAD725AD645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD07633-5F58-414D-9F1F-BCF95EBCBAC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD07633-5F58-414D-9F1F-BCF95EBCBAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD07633-5F58-414D-9F1F-BCF95EBCBAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD07633-5F58-414D-9F1F-BCF95EBCBAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8DBBF15B-B690-4D45-8595-FFD1AD47E622}
+	EndGlobalSection
+EndGlobal
