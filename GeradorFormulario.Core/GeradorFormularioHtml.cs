@@ -13,8 +13,6 @@ namespace GeradorFormulario.Core
 {
     public class GeradorFormularioHtml
     {
-        // (Dentro da classe GeradorFormularioHtml)
-
         public string GerarHtml(DefinicaoFormulario definicao)
         {
             StringBuilder html = new StringBuilder();
@@ -28,7 +26,7 @@ namespace GeradorFormulario.Core
             html.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
             html.AppendLine($"  <title>{definicao.NomeFormulario}</title>");
             html.AppendLine("  <style>");
-            html.AppendLine(GerarCss(definicao.CorPrincipal)); // Passa a cor
+            html.AppendLine(GerarCss(definicao.CorPrincipal));
             html.AppendLine("  </style>");
             html.AppendLine("</head><body>");
 
@@ -38,31 +36,24 @@ namespace GeradorFormulario.Core
             {
                 html.AppendLine("    <div class=\"form-header\">");
 
-                // 1. O Logo
                 if (!string.IsNullOrEmpty(definicao.UrlLogo))
                 {
                     html.AppendLine("      <div class=\"form-logo\">");
-                    // Aqui está o placeholder com as dimensões (140x140)
                     html.AppendLine($"        <img src=\"{definicao.UrlLogo}\" alt=\"Logo da Organização\" style=\"width:140px; height:140px; object-fit:contain;\">");
                     html.AppendLine("      </div>");
                 }
 
-                // 2. O Bloco de Texto (Título e Subtítulo)
                 html.AppendLine("      <div class=\"form-header-text\">");
                 if (!string.IsNullOrEmpty(definicao.TituloHeader))
                 {
-                    // Usa a classe .form-title para o "Cadastro do(a) Estagiário(a)"
                     html.AppendLine($"        <h2 class=\"form-title\">{definicao.TituloHeader}</h2>");
                 }
                 if (!string.IsNullOrEmpty(definicao.SubtituloHeader))
                 {
-                    // A caixa laranja. Note que {definicao.SubtituloHeader}
-                    // pode conter HTML (como <b>)
                     html.AppendLine($"        <div class=\"form-subtitle-box\">{definicao.SubtituloHeader}</div>");
                 }
-                html.AppendLine("      </div>"); // Fim de .form-header-text
-
-                html.AppendLine("    </div>"); // Fim de .form-header
+                html.AppendLine("      </div>");
+                html.AppendLine("    </div>");
             }
 
             html.AppendLine($"    <form action='{definicao.UrlAcao}' method='{definicao.Metodo.ToLower()}'>");
@@ -77,11 +68,7 @@ namespace GeradorFormulario.Core
 
                 foreach (var linha in secao.Linhas)
                 {
-                    // --- AQUI ESTÁ A CORREÇÃO ---
-                    // Faltava o '=' antes de "form-row"
                     html.AppendLine("        <div class=\"form-row\">");
-                    // --------------------------
-
 
                     foreach (var campo in linha.Campos)
                     {
@@ -105,7 +92,6 @@ namespace GeradorFormulario.Core
                         if (campo.Tipo == TipoCampo.CaixaDeSelecao)
                         {
                             html.AppendLine("          <div class=\"checkbox-group\">");
-                            // Corrigido também: adicionado espaço antes de {validacaoAttr}
                             html.AppendLine($"            <input type='checkbox' id='{campo.Nome}' name='{campo.Nome}'{requiredAttr} class=\"form-control\" {validacaoAttr}>");
                             html.AppendLine($"            <label for='{campo.Nome}' class=\"form-label\">{campo.Rotulo}</label>");
                             html.AppendLine("          </div>");
@@ -162,13 +148,10 @@ namespace GeradorFormulario.Core
             html.AppendLine("</body></html>");
             return html.ToString();
         }
-
-        // O método GerarCss(...) e GerarScriptValidacaoCPF() permanecem os mesmos
-
         public string GerarCss(string corPrincipal)
         {
-            string corRgb = "0, 123, 255"; // Um azul padrão caso a conversão falhe
-            if (corPrincipal.Length == 7) // Formato #RRGGBB
+            string corRgb = "0, 123, 255";
+            if (corPrincipal.Length == 7)
             {
                 try
                 {
@@ -177,10 +160,8 @@ namespace GeradorFormulario.Core
                     int b = Convert.ToInt32(corPrincipal.Substring(5, 2), 16);
                     corRgb = $"{r}, {g}, {b}";
                 }
-                catch { /* Mantém o padrão */ }
+                catch { }
             }
-            // O CSS pode continuar o mesmo, pois são nomes de classes
-            // Mas vou traduzir os comentários
             return $$"""
                 /* --- 1. RESET & GLOBAIS --- */
                 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -374,7 +355,6 @@ namespace GeradorFormulario.Core
         }
         private string GerarScriptsJavaScript(bool cpf, bool data, bool celular, bool email)
         {
-            // Se nenhum script for necessário, retorna vazio
             if (!cpf && !data && !celular && !email)
                 return string.Empty;
 
@@ -382,34 +362,29 @@ namespace GeradorFormulario.Core
             script.AppendLine("<script>");
             script.AppendLine("document.addEventListener('DOMContentLoaded', function() {");
 
-            // Funções utilitárias de erro (só adiciona se CPF ou Email precisarem)
             if (cpf || email)
             {
                 script.AppendLine(FuncaoMostrarErro);
                 script.AppendLine(FuncaoRemoverErro);
             }
 
-            // Adiciona a lógica de validação de CPF (se necessário)
             if (cpf)
             {
                 script.AppendLine(FuncaoValidarCPF);
                 script.AppendLine(LogicaHookValidacao("cpf", "validarCPF"));
             }
 
-            // Adiciona a lógica de validação de Email (se necessário)
             if (email)
             {
                 script.AppendLine(FuncaoValidarEmail);
                 script.AppendLine(LogicaHookValidacao("email", "validarEmail"));
             }
 
-            // Adiciona a lógica de máscara de Data (se necessário)
             if (data)
             {
                 script.AppendLine(LogicaMascaraData);
             }
 
-            // Adiciona a lógica de máscara de Celular (se necessário)
             if (celular)
             {
                 script.AppendLine(LogicaMascaraCelular);
@@ -420,10 +395,6 @@ namespace GeradorFormulario.Core
             return script.ToString();
         }
 
-        // 4. BLOCOS DE SCRIPT (como constantes)
-        // Isso torna o código muito mais limpo e modular
-
-        // --- Funções Utilitárias de Erro ---
         private readonly string FuncaoMostrarErro = """
             function mostrarErro(input, mensagem) {
                 removerErro(input); // Remove erros antigos
@@ -445,8 +416,6 @@ namespace GeradorFormulario.Core
             }
         """;
 
-        // --- Lógica de Validação (Genérica) ---
-        // Cria um "hook" que ouve o 'blur' (perder foco) e chama uma função validadora
         private string LogicaHookValidacao(string seletor, string nomeFuncaoValidadora)
         {
             return $$"""
@@ -461,8 +430,6 @@ namespace GeradorFormulario.Core
                 });
             """;
         }
-
-        // --- Módulos de Script Específicos ---
 
         private readonly string FuncaoValidarCPF = """
             function validarCPF(cpf) {
