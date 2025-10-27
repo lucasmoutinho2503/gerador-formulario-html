@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace GeradorFormulario.Core
+namespace GeradorFormulario.Core.Helper
 {
     public class GeradorFormularioHtml
     {
@@ -20,6 +20,10 @@ namespace GeradorFormulario.Core
             bool precisaScriptData = false;
             bool precisaScriptCelular = false;
             bool precisaScriptEmail = false;
+            bool precisaEnctype = definicao.Secoes.SelectMany(s => s.Linhas)
+                                                 .SelectMany(l => l.Campos)
+                                                 .Any(c => c.Tipo == TipoCampo.Arquivo) ||
+                                  definicao.Conexao != null; ;
 
             html.AppendLine("<!DOCTYPE html><html lang=\"pt-br\"><head>");
             html.AppendLine("  <meta charset=\"UTF-8\">");
@@ -55,8 +59,33 @@ namespace GeradorFormulario.Core
                 html.AppendLine("      </div>");
                 html.AppendLine("    </div>");
             }
+            string enctypeAttr = precisaEnctype ? " enctype=\"multipart/form-data\"" : "";
 
-            html.AppendLine($"    <form action='{definicao.UrlAcao}' method='{definicao.Metodo.ToLower()}'>");
+            string targetAttr = (definicao.Conexao != null && !string.IsNullOrEmpty(definicao.Conexao.Target))
+                                ? $" target=\"{definicao.Conexao.Target}\""
+                                : "";
+
+            string actionAttr = (definicao.Conexao != null && !string.IsNullOrEmpty(definicao.Conexao.UrlAcao))
+                                ? $" action=\"{definicao.Conexao.UrlAcao}\""
+                                : "";
+
+            html.AppendLine($"    <form method='{definicao.Metodo.ToLower()}'{enctypeAttr}{actionAttr}{targetAttr}>");
+
+            if (definicao.Conexao != null)
+            {
+                html.AppendLine("      ");
+                if (!string.IsNullOrEmpty(definicao.Conexao.Usuario))
+                    html.AppendLine($"      <input type=\"hidden\" name=\"USUARIO\" value=\"{definicao.Conexao.Usuario}\">");
+                if (!string.IsNullOrEmpty(definicao.Conexao.Senha))
+                    html.AppendLine($"      <input type=\"hidden\" name=\"SENHA\" value=\"{definicao.Conexao.Senha}\">");
+                if (!string.IsNullOrEmpty(definicao.Conexao.Organizacao))
+                    html.AppendLine($"      <input type=\"hidden\" name=\"ORGANIZACAO\" value=\"{definicao.Conexao.Organizacao}\">");
+                if (!string.IsNullOrEmpty(definicao.Conexao.IDFormulario))
+                    html.AppendLine($"      <input type=\"hidden\" name=\"IDFORMULARIO\" value=\"{definicao.Conexao.IDFormulario}\">");
+                if (!string.IsNullOrEmpty(definicao.Conexao.IDJanela))
+                    html.AppendLine($"      <input type=\"hidden\" name=\"IDJANELA\" value=\"{definicao.Conexao.IDJanela}\">");
+                html.AppendLine("      ");
+            }
 
             foreach (var secao in definicao.Secoes)
             {
@@ -120,6 +149,10 @@ namespace GeradorFormulario.Core
                                     }
                                     html.AppendLine("        </select>");
                                     break;
+                                case TipoCampo.Arquivo:
+                                    html.AppendLine($"        <input type='file' id='{campo.Nome}' name='{campo.Nome}'{requiredAttr} {controlClass} {validacaoAttr}>");
+                                    break;
+
                                 default:
                                     string inputType = campo.Tipo.ToString().ToLower();
                                     if (campo.Tipo == TipoCampo.Senha) inputType = "password";

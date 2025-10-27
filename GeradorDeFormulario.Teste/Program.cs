@@ -14,7 +14,7 @@ public class Program
             NomeFormulario = "Cadastro de Estagiário(a)",
             UrlLogo = "C:\\Users\\mouti\\OneDrive\\Desktop\\cicti\\logo.png",
             TituloHeader = "Cadastro do(a) Estagiário(a)",
-            SubtituloHeader = "Preencha <b>TODOS os campos</b> abaixo, para evitar <b>ATRASOS</b> no pagamento da bolsa auxílio.",
+            SubtituloHeader = "Preencha <b>TODOS os campos</b> corretamente, para evitar <b>ATRASOS</b> no pagamento da bolsa auxílio.",
             UrlAcao = "/registrar",
             CorPrincipal = "#FFA500"
         };
@@ -156,9 +156,44 @@ public class Program
             }
         ));
 
+        var secaoArquivos = new SecaoFormulario
+        {
+            Titulo = "Envio de Documentos"
+        };
+
+        secaoArquivos.Linhas.Add(new LinhaFormulario(
+            new CampoFormulario
+            {
+                Tipo = TipoCampo.Arquivo,
+                Nome = "documentosComprovacao",
+                Rotulo = "Comprovante ou atestado de matrícula",
+                Obrigatorio = true
+            }
+        ));
+
+        secaoArquivos.Linhas.Add(new LinhaFormulario(
+            new CampoFormulario
+            {
+                Tipo = TipoCampo.Arquivo,
+                Nome = "documentosComprovacao",
+                Rotulo = "Identidade",
+                Obrigatorio = true
+            }
+        ));
+        secaoArquivos.Linhas.Add(new LinhaFormulario(
+            new CampoFormulario
+            {
+                Tipo = TipoCampo.Arquivo,
+                Nome = "documentosComprovacao",
+                Rotulo = "Comprovante de residência",
+                Obrigatorio = true
+            }
+        ));
+
         meuFormulario.Secoes.Add(secaoPessoal);
         meuFormulario.Secoes.Add(secaoInstitucional);
         meuFormulario.Secoes.Add(secaoDadosBancarios);
+        meuFormulario.Secoes.Add(secaoArquivos);
 
         var gerador = new GeradorFormularioHtml();
         string htmlResultante = gerador.GerarHtml(meuFormulario);

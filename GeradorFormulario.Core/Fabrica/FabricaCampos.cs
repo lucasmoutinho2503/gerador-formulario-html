@@ -195,5 +195,15 @@ namespace GeradorFormulario.Core.Fabrica
                 Obrigatorio = true
             };
         }
+        public static CampoFormulario CriarEnvioArquivo()
+        {
+            return new CampoFormulario
+            {
+                Tipo = TipoCampo.Arquivo,
+                Nome = "envioArquivo",
+                Rotulo = "Anexar Arquivo",
+                Obrigatorio = true
+            };
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace GeradorFormulario.Core.Enums
         Numero,
         AreaDeTexto,
         Selecao,
-        CaixaDeSelecao
+        CaixaDeSelecao,
+        Arquivo
     }
 }
