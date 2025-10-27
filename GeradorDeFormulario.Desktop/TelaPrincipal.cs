@@ -3,6 +3,7 @@ using GeradorFormulario.Core.Fabrica;
 using GeradorFormulario.Core.Helper;
 using GeradorFormulario.Core.Models;
 using Microsoft.Web.WebView2.WinForms;
+using Newtonsoft.Json;
 
 namespace GeradorDeFormulario.Desktop
 {
@@ -32,10 +33,9 @@ namespace GeradorDeFormulario.Desktop
             };
 
             arquivoHtmlTemporario = Path.Combine(Path.GetTempPath(), "form_preview.html");
-            cmbCamposDisponiveis.Items.Add("Nome");
+            cmbCamposDisponiveis.Items.Add("Nome Completo");
             cmbCamposDisponiveis.Items.Add("Email");
             cmbCamposDisponiveis.Items.Add("CPF");
-            cmbCamposDisponiveis.Items.Add("RG");
             cmbCamposDisponiveis.Items.Add("Data de Nascimento");
             cmbCamposDisponiveis.Items.Add("Celular");
             cmbCamposDisponiveis.Items.Add("Arquivo");
@@ -134,8 +134,9 @@ namespace GeradorDeFormulario.Desktop
                 // Adiciona o campo
                 switch (campoEscolhido)
                 {
-                    case "Nome": linha.Campos.Add(FabricaCampos.CriarNomeCompleto()); break;
+                    case "Nome Completo": linha.Campos.Add(FabricaCampos.CriarNomeCompleto()); break;
                     case "CPF": linha.Campos.Add(FabricaCampos.CriarCPF()); break;
+                    case "Celular": linha.Campos.Add(FabricaCampos.CriarCelular()); break;
                     // ... (etc. para todos os campos)
                     case "Arquivo": linha.Campos.Add(FabricaCampos.CriarEnvioArquivo()); break;
                 }
@@ -259,6 +260,54 @@ namespace GeradorDeFormulario.Desktop
 
             AtualizarPreview();
         }
+
+        private void carregarModeloToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dialogoAbrirModelo.Filter = "Arquivos de Template JSON (*.json)|*.json";
+            dialogoAbrirModelo.Title = "Carregar Template de Formulário";
+
+            if (dialogoAbrirModelo.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string json = File.ReadAllText(dialogoAbrirModelo.FileName);
+
+                    definicaoFormulario = JsonConvert.DeserializeObject<DefinicaoFormulario>(json);
+
+                    AtualizarTreeView();
+                    AtualizarPreview();
+                    propertyGridItem.SelectedObject = definicaoFormulario;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erro ao carregar o template: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void salvarModeloToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dialogoSalvarModelo.Filter = "Arquivos de Template JSON (*.json)|*.json";
+            dialogoSalvarModelo.Title = "Salvar Template Como...";
+            dialogoSalvarModelo.FileName = "novo_template.json";
+
+            if (dialogoSalvarModelo.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string json = JsonConvert.SerializeObject(definicaoFormulario, Formatting.Indented);
+
+                    File.WriteAllText(dialogoSalvarModelo.FileName, json);
+
+                    MessageBox.Show("Template salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erro ao salvar o template: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
-    
+
 }

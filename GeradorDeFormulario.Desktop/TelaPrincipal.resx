@@ -129,4 +129,10 @@
   <metadata name="dialogoSalvarArquivo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
+  <metadata name="dialogoAbrirModelo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>299, 17</value>
+  </metadata>
+  <metadata name="dialogoSalvarModelo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>467, 17</value>
+  </metadata>
 </root>

@@ -31,6 +31,9 @@
             menuStrip1 = new MenuStrip();
             arquivoToolStripMenuItem = new ToolStripMenuItem();
             salvarArquivoToolStripMenuItem = new ToolStripMenuItem();
+            modeloToolStripMenuItem = new ToolStripMenuItem();
+            salvarModeloToolStripMenuItem = new ToolStripMenuItem();
+            carregarModeloToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
             treeViewFormulario = new TreeView();
@@ -45,6 +48,8 @@
             btnConexao = new Button();
             visualizadorFormulario = new Microsoft.Web.WebView2.WinForms.WebView2();
             dialogoSalvarArquivo = new SaveFileDialog();
+            dialogoAbrirModelo = new OpenFileDialog();
+            dialogoSalvarModelo = new SaveFileDialog();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -69,7 +74,7 @@
             // 
             // arquivoToolStripMenuItem
             // 
-            arquivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { salvarArquivoToolStripMenuItem });
+            arquivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { salvarArquivoToolStripMenuItem, modeloToolStripMenuItem });
             arquivoToolStripMenuItem.Name = "arquivoToolStripMenuItem";
             arquivoToolStripMenuItem.Size = new Size(61, 20);
             arquivoToolStripMenuItem.Text = "Arquivo";
@@ -77,9 +82,30 @@
             // salvarArquivoToolStripMenuItem
             // 
             salvarArquivoToolStripMenuItem.Name = "salvarArquivoToolStripMenuItem";
-            salvarArquivoToolStripMenuItem.Size = new Size(150, 22);
-            salvarArquivoToolStripMenuItem.Text = "Salvar Arquivo";
+            salvarArquivoToolStripMenuItem.Size = new Size(166, 22);
+            salvarArquivoToolStripMenuItem.Text = "Salvar Formulário";
             salvarArquivoToolStripMenuItem.Click += salvarArquivoToolStripMenuItem_Click;
+            // 
+            // modeloToolStripMenuItem
+            // 
+            modeloToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { salvarModeloToolStripMenuItem, carregarModeloToolStripMenuItem });
+            modeloToolStripMenuItem.Name = "modeloToolStripMenuItem";
+            modeloToolStripMenuItem.Size = new Size(166, 22);
+            modeloToolStripMenuItem.Text = "Modelo";
+            // 
+            // salvarModeloToolStripMenuItem
+            // 
+            salvarModeloToolStripMenuItem.Name = "salvarModeloToolStripMenuItem";
+            salvarModeloToolStripMenuItem.Size = new Size(180, 22);
+            salvarModeloToolStripMenuItem.Text = "Salvar Modelo";
+            salvarModeloToolStripMenuItem.Click += salvarModeloToolStripMenuItem_Click;
+            // 
+            // carregarModeloToolStripMenuItem
+            // 
+            carregarModeloToolStripMenuItem.Name = "carregarModeloToolStripMenuItem";
+            carregarModeloToolStripMenuItem.Size = new Size(180, 22);
+            carregarModeloToolStripMenuItem.Text = "Carregar Modelo";
+            carregarModeloToolStripMenuItem.Click += carregarModeloToolStripMenuItem_Click;
             // 
             // splitContainer1
             // 
@@ -227,6 +253,10 @@
             visualizadorFormulario.TabIndex = 0;
             visualizadorFormulario.ZoomFactor = 1D;
             // 
+            // dialogoAbrirModelo
+            // 
+            dialogoAbrirModelo.FileName = "openFileDialog1";
+            // 
             // TelaPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -275,5 +305,10 @@
         private ToolStripMenuItem salvarArquivoToolStripMenuItem;
         private SaveFileDialog dialogoSalvarArquivo;
         private Button btnConexao;
+        private ToolStripMenuItem modeloToolStripMenuItem;
+        private ToolStripMenuItem salvarModeloToolStripMenuItem;
+        private ToolStripMenuItem carregarModeloToolStripMenuItem;
+        private OpenFileDialog dialogoAbrirModelo;
+        private SaveFileDialog dialogoSalvarModelo;
     }
 }
