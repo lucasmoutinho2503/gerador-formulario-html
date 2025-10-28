@@ -18,7 +18,7 @@ namespace GeradorDeFormulario.Desktop
             InitializeComponent();
             gerador = new GeradorFormularioHtml();
         }
-
+        private TabPage paginaDeOpcoes;
         private async void TelaPrincipal_Load(object sender, EventArgs e)
         {
             var gerador = new GeradorFormularioHtml();
@@ -39,12 +39,16 @@ namespace GeradorDeFormulario.Desktop
             cmbCamposDisponiveis.Items.Add("Data de Nascimento");
             cmbCamposDisponiveis.Items.Add("Celular");
             cmbCamposDisponiveis.Items.Add("Arquivo");
-            cmbCamposDisponiveis.Items.Add("Linha Endereço (B/C/C)"); // Componente de linha
+            cmbCamposDisponiveis.Items.Add("Estado Civil");
             cmbCamposDisponiveis.SelectedIndex = 0;
 
             treeViewFormulario.Tag = definicaoFormulario; // Associa o objeto raiz
             propertyGridItem.SelectedObject = definicaoFormulario;
 
+            this.tabControlEditor.TabPages.Remove(this.tabOpcoes);
+            this.paginaDeOpcoes = this.tabOpcoes;
+            AtualizarTreeView();
+            AtualizarPreview();
         }
         private void AtualizarTreeView()
         {
@@ -137,7 +141,7 @@ namespace GeradorDeFormulario.Desktop
                     case "Nome Completo": linha.Campos.Add(FabricaCampos.CriarNomeCompleto()); break;
                     case "CPF": linha.Campos.Add(FabricaCampos.CriarCPF()); break;
                     case "Celular": linha.Campos.Add(FabricaCampos.CriarCelular()); break;
-                    // ... (etc. para todos os campos)
+                    case "Estado Civil": linha.Campos.Add(FabricaCampos.CriarEstadoCivil()); break;
                     case "Arquivo": linha.Campos.Add(FabricaCampos.CriarEnvioArquivo()); break;
                 }
 
@@ -199,9 +203,42 @@ namespace GeradorDeFormulario.Desktop
         private void treeViewFormulario_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Vincula a PropertyGrid ao item clicado
-            if (e.Node?.Tag != null)
+            if (e.Node?.Tag == null)
             {
-                propertyGridItem.SelectedObject = e.Node.Tag;
+                if (this.tabControlEditor.TabPages.Contains(paginaDeOpcoes))
+                {
+                    this.tabControlEditor.TabPages.Remove(paginaDeOpcoes);
+                }
+                return;
+            }
+
+            propertyGridItem.SelectedObject = e.Node.Tag;
+
+            if (e.Node.Tag is CampoFormulario campo && campo.Tipo == GeradorFormulario.Core.Enums.TipoCampo.Selecao)
+            {
+                // É UM CAMPO DE SELEÇÃO!
+
+                // 3. Mostra a aba de opções (se ela já não estiver lá)
+                if (!this.tabControlEditor.TabPages.Contains(paginaDeOpcoes))
+                {
+                    this.tabControlEditor.TabPages.Add(paginaDeOpcoes);
+                }
+
+                // 4. Carrega as opções na lista
+                CarregarOpcoesNaLista(campo);
+
+                // 5. Opcional: Foca automaticamente na aba de opções
+                this.tabControlEditor.SelectedTab = paginaDeOpcoes;
+            }
+            else
+            {
+                // NÃO É UM CAMPO DE SELEÇÃO!
+
+                // 6. Esconde a aba de opções (se ela estiver visível)
+                if (this.tabControlEditor.TabPages.Contains(paginaDeOpcoes))
+                {
+                    this.tabControlEditor.TabPages.Remove(paginaDeOpcoes);
+                }
             }
         }
 
@@ -308,6 +345,43 @@ namespace GeradorDeFormulario.Desktop
                 }
             }
         }
-    }
+        private void CarregarOpcoesNaLista(CampoFormulario campo)
+        {
+            lstOpcoes.Items.Clear();
+            foreach (string opcao in campo.Opcoes)
+            {
+                lstOpcoes.Items.Add(opcao);
+            }
+        }
 
+        private void btnAdicionarOpcao_Click(object sender, EventArgs e)
+        {
+            if (treeViewFormulario.SelectedNode?.Tag is CampoFormulario campo && !string.IsNullOrWhiteSpace(txtNovaOpcao.Text))
+            {
+                // 2. Adiciona a nova opção à lista de dados
+                campo.Opcoes.Add(txtNovaOpcao.Text);
+
+                // 3. Atualiza a UI
+                CarregarOpcoesNaLista(campo); // Atualiza o ListBox
+                AtualizarPreview();           // Atualiza o WebView2
+
+                txtNovaOpcao.Clear();
+                txtNovaOpcao.Focus();
+            }
+        }
+
+        private void btnRemoverOpcao_Click(object sender, EventArgs e)
+        {
+            if (treeViewFormulario.SelectedNode?.Tag is CampoFormulario campo && lstOpcoes.SelectedItem != null)
+            {
+                // 2. Remove a opção da lista de dados
+                string opcaoRemover = lstOpcoes.SelectedItem.ToString();
+                campo.Opcoes.Remove(opcaoRemover);
+
+                // 3. Atualiza a UI
+                CarregarOpcoesNaLista(campo);
+                AtualizarPreview();
+            }
+        }
+    }
 }

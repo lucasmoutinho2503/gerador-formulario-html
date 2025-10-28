@@ -35,9 +35,16 @@
             salvarModeloToolStripMenuItem = new ToolStripMenuItem();
             carregarModeloToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
+            tabControlEditor = new TabControl();
+            tabPropriedades = new TabPage();
+            propertyGridItem = new PropertyGrid();
+            tabOpcoes = new TabPage();
+            btnRemoverOpcao = new Button();
+            btnAdicionarOpcao = new Button();
+            txtNovaOpcao = new TextBox();
+            lstOpcoes = new CheckedListBox();
             splitContainer2 = new SplitContainer();
             treeViewFormulario = new TreeView();
-            propertyGridItem = new PropertyGrid();
             flowLayoutPanel1 = new FlowLayoutPanel();
             label1 = new Label();
             cmbCamposDisponiveis = new ComboBox();
@@ -55,9 +62,11 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            tabControlEditor.SuspendLayout();
+            tabPropriedades.SuspendLayout();
+            tabOpcoes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
             splitContainer2.Panel1.SuspendLayout();
-            splitContainer2.Panel2.SuspendLayout();
             splitContainer2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)visualizadorFormulario).BeginInit();
@@ -96,14 +105,14 @@
             // salvarModeloToolStripMenuItem
             // 
             salvarModeloToolStripMenuItem.Name = "salvarModeloToolStripMenuItem";
-            salvarModeloToolStripMenuItem.Size = new Size(180, 22);
+            salvarModeloToolStripMenuItem.Size = new Size(163, 22);
             salvarModeloToolStripMenuItem.Text = "Salvar Modelo";
             salvarModeloToolStripMenuItem.Click += salvarModeloToolStripMenuItem_Click;
             // 
             // carregarModeloToolStripMenuItem
             // 
             carregarModeloToolStripMenuItem.Name = "carregarModeloToolStripMenuItem";
-            carregarModeloToolStripMenuItem.Size = new Size(180, 22);
+            carregarModeloToolStripMenuItem.Size = new Size(163, 22);
             carregarModeloToolStripMenuItem.Text = "Carregar Modelo";
             carregarModeloToolStripMenuItem.Click += carregarModeloToolStripMenuItem_Click;
             // 
@@ -115,6 +124,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(tabControlEditor);
             splitContainer1.Panel1.Controls.Add(splitContainer2);
             splitContainer1.Panel1.Controls.Add(flowLayoutPanel1);
             // 
@@ -125,6 +135,85 @@
             splitContainer1.SplitterDistance = 388;
             splitContainer1.TabIndex = 1;
             // 
+            // tabControlEditor
+            // 
+            tabControlEditor.Controls.Add(tabPropriedades);
+            tabControlEditor.Controls.Add(tabOpcoes);
+            tabControlEditor.Location = new Point(3, 438);
+            tabControlEditor.Name = "tabControlEditor";
+            tabControlEditor.SelectedIndex = 0;
+            tabControlEditor.Size = new Size(382, 319);
+            tabControlEditor.TabIndex = 2;
+            // 
+            // tabPropriedades
+            // 
+            tabPropriedades.Controls.Add(propertyGridItem);
+            tabPropriedades.Location = new Point(4, 24);
+            tabPropriedades.Name = "tabPropriedades";
+            tabPropriedades.Padding = new Padding(3);
+            tabPropriedades.Size = new Size(374, 291);
+            tabPropriedades.TabIndex = 0;
+            tabPropriedades.Text = "Propriedades";
+            tabPropriedades.UseVisualStyleBackColor = true;
+            // 
+            // propertyGridItem
+            // 
+            propertyGridItem.Dock = DockStyle.Fill;
+            propertyGridItem.Location = new Point(3, 3);
+            propertyGridItem.Name = "propertyGridItem";
+            propertyGridItem.Size = new Size(368, 285);
+            propertyGridItem.TabIndex = 0;
+            propertyGridItem.PropertyValueChanged += propertyGridItem_PropertyValueChanged;
+            // 
+            // tabOpcoes
+            // 
+            tabOpcoes.Controls.Add(btnRemoverOpcao);
+            tabOpcoes.Controls.Add(btnAdicionarOpcao);
+            tabOpcoes.Controls.Add(txtNovaOpcao);
+            tabOpcoes.Controls.Add(lstOpcoes);
+            tabOpcoes.Location = new Point(4, 24);
+            tabOpcoes.Name = "tabOpcoes";
+            tabOpcoes.Padding = new Padding(3);
+            tabOpcoes.Size = new Size(374, 291);
+            tabOpcoes.TabIndex = 1;
+            tabOpcoes.Text = "Opções (Dropdown)";
+            tabOpcoes.UseVisualStyleBackColor = true;
+            // 
+            // btnRemoverOpcao
+            // 
+            btnRemoverOpcao.Location = new Point(3, 179);
+            btnRemoverOpcao.Name = "btnRemoverOpcao";
+            btnRemoverOpcao.Size = new Size(368, 23);
+            btnRemoverOpcao.TabIndex = 3;
+            btnRemoverOpcao.Text = "Remover Selecionado";
+            btnRemoverOpcao.UseVisualStyleBackColor = true;
+            btnRemoverOpcao.Click += btnRemoverOpcao_Click;
+            // 
+            // btnAdicionarOpcao
+            // 
+            btnAdicionarOpcao.Location = new Point(3, 156);
+            btnAdicionarOpcao.Name = "btnAdicionarOpcao";
+            btnAdicionarOpcao.Size = new Size(368, 23);
+            btnAdicionarOpcao.TabIndex = 2;
+            btnAdicionarOpcao.Text = "Adicionar Opção";
+            btnAdicionarOpcao.UseVisualStyleBackColor = true;
+            btnAdicionarOpcao.Click += btnAdicionarOpcao_Click;
+            // 
+            // txtNovaOpcao
+            // 
+            txtNovaOpcao.Location = new Point(3, 133);
+            txtNovaOpcao.Name = "txtNovaOpcao";
+            txtNovaOpcao.Size = new Size(368, 23);
+            txtNovaOpcao.TabIndex = 1;
+            // 
+            // lstOpcoes
+            // 
+            lstOpcoes.FormattingEnabled = true;
+            lstOpcoes.Location = new Point(3, 3);
+            lstOpcoes.Name = "lstOpcoes";
+            lstOpcoes.Size = new Size(368, 130);
+            lstOpcoes.TabIndex = 0;
+            // 
             // splitContainer2
             // 
             splitContainer2.Location = new Point(3, 93);
@@ -134,10 +223,6 @@
             // splitContainer2.Panel1
             // 
             splitContainer2.Panel1.Controls.Add(treeViewFormulario);
-            // 
-            // splitContainer2.Panel2
-            // 
-            splitContainer2.Panel2.Controls.Add(propertyGridItem);
             splitContainer2.Size = new Size(382, 664);
             splitContainer2.SplitterDistance = 338;
             splitContainer2.TabIndex = 1;
@@ -151,24 +236,15 @@
             treeViewFormulario.TabIndex = 0;
             treeViewFormulario.AfterSelect += treeViewFormulario_AfterSelect;
             // 
-            // propertyGridItem
-            // 
-            propertyGridItem.Dock = DockStyle.Fill;
-            propertyGridItem.Location = new Point(0, 0);
-            propertyGridItem.Name = "propertyGridItem";
-            propertyGridItem.Size = new Size(382, 322);
-            propertyGridItem.TabIndex = 0;
-            propertyGridItem.PropertyValueChanged += propertyGridItem_PropertyValueChanged;
-            // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(label1);
             flowLayoutPanel1.Controls.Add(cmbCamposDisponiveis);
-            flowLayoutPanel1.Controls.Add(btnAdicionarCampo);
+            flowLayoutPanel1.Controls.Add(btnConexao);
             flowLayoutPanel1.Controls.Add(btnAdicionarSecao);
             flowLayoutPanel1.Controls.Add(btnAdicionarLinha);
+            flowLayoutPanel1.Controls.Add(btnAdicionarCampo);
             flowLayoutPanel1.Controls.Add(btnRemoverItem);
-            flowLayoutPanel1.Controls.Add(btnConexao);
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(385, 87);
@@ -193,7 +269,7 @@
             // 
             // btnAdicionarCampo
             // 
-            btnAdicionarCampo.Location = new Point(3, 32);
+            btnAdicionarCampo.Location = new Point(246, 32);
             btnAdicionarCampo.Name = "btnAdicionarCampo";
             btnAdicionarCampo.Size = new Size(75, 23);
             btnAdicionarCampo.TabIndex = 2;
@@ -223,7 +299,7 @@
             // 
             // btnRemoverItem
             // 
-            btnRemoverItem.Location = new Point(246, 32);
+            btnRemoverItem.Location = new Point(3, 61);
             btnRemoverItem.Name = "btnRemoverItem";
             btnRemoverItem.Size = new Size(75, 23);
             btnRemoverItem.TabIndex = 5;
@@ -233,7 +309,7 @@
             // 
             // btnConexao
             // 
-            btnConexao.Location = new Point(3, 61);
+            btnConexao.Location = new Point(3, 32);
             btnConexao.Name = "btnConexao";
             btnConexao.Size = new Size(75, 23);
             btnConexao.TabIndex = 6;
@@ -275,8 +351,11 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            tabControlEditor.ResumeLayout(false);
+            tabPropriedades.ResumeLayout(false);
+            tabOpcoes.ResumeLayout(false);
+            tabOpcoes.PerformLayout();
             splitContainer2.Panel1.ResumeLayout(false);
-            splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
@@ -310,5 +389,12 @@
         private ToolStripMenuItem carregarModeloToolStripMenuItem;
         private OpenFileDialog dialogoAbrirModelo;
         private SaveFileDialog dialogoSalvarModelo;
+        private TabControl tabControlEditor;
+        private TabPage tabPropriedades;
+        private TabPage tabOpcoes;
+        private Button btnRemoverOpcao;
+        private Button btnAdicionarOpcao;
+        private TextBox txtNovaOpcao;
+        private CheckedListBox lstOpcoes;
     }
 }
