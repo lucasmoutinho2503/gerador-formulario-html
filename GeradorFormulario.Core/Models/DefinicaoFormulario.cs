@@ -35,6 +35,11 @@ namespace GeradorFormulario.Core.Models
         [Description("Como os dados serão enviados (POST ou GET).")]
         public string Metodo { get; set; }
 
+        [Category("Metadados")]
+        [DisplayName("Tags de Categoria")]
+        [Description("Lista de tags para filtrar (ex: RH, Hotel, PT-BR).")]
+        public List<string> Tags { get; set; }
+
         [Browsable(false)]
         public List<SecaoFormulario> Secoes { get; set; }
 
@@ -51,6 +56,7 @@ namespace GeradorFormulario.Core.Models
             Metodo = "POST";
             Secoes = new List<SecaoFormulario>();
             Conexao = null;
+            Tags = new List<string>();
         }
     }
 }

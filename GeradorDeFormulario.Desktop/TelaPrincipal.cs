@@ -4,6 +4,7 @@ using GeradorFormulario.Core.Helper;
 using GeradorFormulario.Core.Models;
 using Microsoft.Web.WebView2.WinForms;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace GeradorDeFormulario.Desktop
 {
@@ -12,27 +13,34 @@ namespace GeradorDeFormulario.Desktop
         private DefinicaoFormulario definicaoFormulario;
         private GeradorFormularioHtml gerador;
         private string arquivoHtmlTemporario;
+        private TabPage paginaDeOpcoes;
 
         public TelaPrincipal()
         {
             InitializeComponent();
             gerador = new GeradorFormularioHtml();
-        }
-        private TabPage paginaDeOpcoes;
-        private async void TelaPrincipal_Load(object sender, EventArgs e)
-        {
-            var gerador = new GeradorFormularioHtml();
-            await visualizadorFormulario.EnsureCoreWebView2Async(null);
-
-            definicaoFormulario = new DefinicaoFormulario
+            this.definicaoFormulario = new DefinicaoFormulario
             {
-                NomeFormulario = "Meu Formulário Dinâmico",
-                TituloHeader = "Formulário de Teste",
-                UrlLogo = "https://via.placeholder.com/140", // Placeholder
-                CorPrincipal = "#FFA500"
+                TituloHeader = "Novo Formulário em Branco",
+                CorPrincipal = "#007bff"
             };
 
+        }
+        public TelaPrincipal(DefinicaoFormulario modelo)
+        {
+            InitializeComponent(); // Sempre chame isso primeiro
+            gerador = new GeradorFormularioHtml();
+
+            this.definicaoFormulario = modelo;
+
+        }
+
+        private async void TelaPrincipal_Load(object sender, EventArgs e)
+        {
+            await visualizadorFormulario.EnsureCoreWebView2Async(null);
+
             arquivoHtmlTemporario = Path.Combine(Path.GetTempPath(), "form_preview.html");
+
             cmbCamposDisponiveis.Items.Add("Nome Completo");
             cmbCamposDisponiveis.Items.Add("Email");
             cmbCamposDisponiveis.Items.Add("CPF");
@@ -278,26 +286,6 @@ namespace GeradorDeFormulario.Desktop
 
         }
 
-        private void btnConexao_Click(object sender, EventArgs e)
-        {
-            if (definicaoFormulario.Conexao == null)
-            {
-                definicaoFormulario.Conexao = new ConexaoApi();
-                definicaoFormulario.Conexao.UrlAcao = "URL-Externa";
-                definicaoFormulario.Conexao.Target = "formEnviadoFrame";
-                definicaoFormulario.Conexao.Usuario = "nome-usuario";
-                definicaoFormulario.Conexao.Senha = "senha";
-                // --- FIM DA ATUALIZAÇÃO ---
-
-
-                AtualizarTreeView();
-            }
-
-            propertyGridItem.SelectedObject = definicaoFormulario.Conexao;
-
-            AtualizarPreview();
-        }
-
         private void carregarModeloToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dialogoAbrirModelo.Filter = "Arquivos de Template JSON (*.json)|*.json";
@@ -381,6 +369,93 @@ namespace GeradorDeFormulario.Desktop
                 // 3. Atualiza a UI
                 CarregarOpcoesNaLista(campo);
                 AtualizarPreview();
+            }
+        }
+
+        private void conexãoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (definicaoFormulario.Conexao == null)
+            {
+                definicaoFormulario.Conexao = new ConexaoApi();
+                definicaoFormulario.Conexao.UrlAcao = "URL-Externa";
+                definicaoFormulario.Conexao.Target = "formEnviadoFrame";
+                definicaoFormulario.Conexao.Usuario = "nome-usuario";
+                definicaoFormulario.Conexao.Senha = "senha";
+                // --- FIM DA ATUALIZAÇÃO ---
+
+
+                AtualizarTreeView();
+            }
+
+            propertyGridItem.SelectedObject = definicaoFormulario.Conexao;
+
+            AtualizarPreview();
+        }
+
+        private void exportarProjetoCompletoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dialogoSelecionarPasta.ShowDialog() == DialogResult.OK)
+            {
+                string pastaDeDestino = dialogoSelecionarPasta.SelectedPath;
+
+                try
+                {
+                    string nomeDaPastaProjeto = definicaoFormulario.TituloHeader.Replace(" ", "_")
+                                                .Replace("(", "").Replace(")", "")
+                                                .Replace("/", "-").Replace(":", "-");
+
+                    string pastaRaizProjeto = Path.Combine(pastaDeDestino, nomeDaPastaProjeto);
+
+                    if (Directory.Exists(pastaRaizProjeto))
+                    {
+                        var resultado = MessageBox.Show(
+                            $"A pasta '{pastaRaizProjeto}' já existe.\nDeseja sobrescrever os arquivos?",
+                            "Atenção: Pasta existente",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning);
+
+                        if (resultado == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+
+                    Directory.CreateDirectory(pastaRaizProjeto);
+
+                    string pastaJson = Path.Combine(pastaRaizProjeto, "json");
+                    string pastaImg = Path.Combine(pastaRaizProjeto, "img");
+
+                    Directory.CreateDirectory(pastaJson);
+                    Directory.CreateDirectory(pastaImg);
+
+                    string jsonModelo = JsonConvert.SerializeObject(definicaoFormulario, Formatting.Indented);
+                    string caminhoJson = Path.Combine(pastaJson, "template_formulario.json");
+                    File.WriteAllText(caminhoJson, jsonModelo);
+
+                    if (!string.IsNullOrEmpty(definicaoFormulario.UrlLogo) && File.Exists(definicaoFormulario.UrlLogo))
+                    {
+                        string nomeLogo = Path.GetFileName(definicaoFormulario.UrlLogo);
+                        string caminhoImgDestino = Path.Combine(pastaImg, nomeLogo);
+                        File.Copy(definicaoFormulario.UrlLogo, caminhoImgDestino, true);
+
+                        definicaoFormulario.UrlLogo = $"img/{nomeLogo}";
+                    }
+
+                    string htmlFinal = gerador.GerarHtml(definicaoFormulario);
+
+                    string caminhoHtml = Path.Combine(pastaRaizProjeto, "index.html");
+                    File.WriteAllText(caminhoHtml, htmlFinal);
+
+                    AtualizarPreview();
+                    propertyGridItem.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erro ao salvar o projeto: {ex.Message}",
+                                    "Erro",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                }
             }
         }
     }
