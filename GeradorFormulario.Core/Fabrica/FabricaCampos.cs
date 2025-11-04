@@ -10,41 +10,16 @@ namespace GeradorFormulario.Core.Fabrica
 {
     public static class FabricaCampos
     {
-
-        public static CampoFormulario CriarNomeCompleto()
+        public static CampoFormulario CriarTexto()
         {
             return new CampoFormulario
             {
                 Tipo = TipoCampo.Texto,
-                Nome = "nomeCompleto",
-                Rotulo = "Nome Completo",
+                Nome = "texto",
+                Rotulo = "Texto",
                 Obrigatorio = true
             };
         }
-
-        public static CampoFormulario CriarNomeSocial()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "nomeCompleto",
-                Rotulo = "Nome Social (Opcional)"
-            };
-        }
-
-        public static CampoFormulario CriarCelular()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "celular",
-                Rotulo = "Celular",
-                Placeholder = "(XX) 9XXXX-XXXX",
-                Obrigatorio = true,
-                ValidacaoEspecial = "celular"
-            };
-        }
-
         public static CampoFormulario CriarEmail()
         {
             return new CampoFormulario
@@ -56,143 +31,55 @@ namespace GeradorFormulario.Core.Fabrica
                 ValidacaoEspecial = "email"
             };
         }
-
-        public static CampoFormulario CriarCPF()
+        public static CampoFormulario CriarSenha()
         {
             return new CampoFormulario
             {
-                Tipo = TipoCampo.Texto,
-                Nome = "cpf",
-                Rotulo = "CPF",
-                Placeholder = "000.000.000-00",
-                Obrigatorio = true,
-                ValidacaoEspecial = "cpf"
-            };
-        }
-
-        public static CampoFormulario CriarRG()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "rg",
-                Rotulo = "RG",
+                Tipo = TipoCampo.Senha,
+                Nome = "senha",
+                Rotulo = "Senha",
                 Obrigatorio = true
             };
         }
-
-        public static CampoFormulario CriarBairro()
+        public static CampoFormulario CriarNumero()
         {
             return new CampoFormulario
             {
-                Tipo = TipoCampo.Texto,
-                Nome = "endereco_bairro",
-                Rotulo = "Bairro",
+                Tipo = TipoCampo.Numero,
+                Nome = "numero",
+                Rotulo = "Número",
                 Obrigatorio = true
             };
         }
-
-        public static CampoFormulario CriarCidade()
+        public static CampoFormulario CriarAreaDeTexto()
         {
             return new CampoFormulario
             {
-                Tipo = TipoCampo.Texto,
-                Nome = "endereco_cidade",
-                Rotulo = "Cidade",
+                Tipo = TipoCampo.AreaDeTexto,
+                Nome = "areaDeTexto",
+                Rotulo = "Área de Texto",
                 Obrigatorio = true
             };
         }
-        public static CampoFormulario CriarCEP()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "enderecoCep",
-                Rotulo = "CEP",
-                Obrigatorio = true
-            };
-        }
-        public static CampoFormulario CriarDataNascimento()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "data_nascimento",
-                Rotulo = "Data de Nascimento",
-                Placeholder = "dd/mm/aaaa",
-                Obrigatorio = true,
-                ValidacaoEspecial = "data"
-            };
-        }
-        public static CampoFormulario CriarOrgaoExpedidor()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "orgaoExpedidor",
-                Rotulo = "Órgão Expedidor",
-                Obrigatorio = true
-            };
-        }
-        public static CampoFormulario CriarNacionalidade()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "nacionalidade",
-                Rotulo = "Nacionalidade",
-                Obrigatorio = true
-            };
-        }
-        public static CampoFormulario CriarNaturalidade()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "naturalidade",
-                Rotulo = "Naturalidade",
-                Obrigatorio = true
-            };
-        }
-        public static CampoFormulario CriarSexoBiologico()
+        public static CampoFormulario CriarSelecao()
         {
             return new CampoFormulario
             {
                 Tipo = TipoCampo.Selecao,
-                Nome = "sexoBiologico",
-                Rotulo = "Sexo Biológico",
+                Nome = "selecao",
+                Rotulo = "Seleção",
                 Obrigatorio = true,
-                Opcoes = new List<string> { "", "Masculino", "Feminino", "Outro" }
+                Opcoes = new List<string> { "", "Opção 1", "Opção 2", "Opção 3" }
             };
         }
-        public static CampoFormulario CriarIdentidadeDegenero()
+        public static CampoFormulario CriarCaixaDeSelecao()
         {
             return new CampoFormulario
             {
-                Tipo = TipoCampo.Texto,
-                Nome = "identidadeDegenero",
-                Rotulo = "Identidade de Gênero (Opcional)"
-            };
-        }
-        public static CampoFormulario CriarEstadoCivil()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Selecao,
-                Nome = "estadoCivil",
-                Rotulo = "Estado Civil",
-                Obrigatorio = true,
-                Opcoes = new List<string> { "" , "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)", "União Estável" }
-            };
-        }
-        public static CampoFormulario CriarEndereco()
-        {
-            return new CampoFormulario
-            {
-                Tipo = TipoCampo.Texto,
-                Nome = "endereco",
-                Rotulo = "Endereço Residencial",
-                Obrigatorio = true
+                Tipo = TipoCampo.CaixaDeSelecao,
+                Nome = "caixaDeSelecao",
+                Rotulo = "Caixa de Seleção",
+                Obrigatorio = false,
             };
         }
         public static CampoFormulario CriarEnvioArquivo()
@@ -203,6 +90,18 @@ namespace GeradorFormulario.Core.Fabrica
                 Nome = "envioArquivo",
                 Rotulo = "Anexar Arquivo",
                 Obrigatorio = true
+            };
+        }
+
+        public static CampoFormulario CriarAssinatura()
+        {
+            return new CampoFormulario
+            {
+                Tipo = TipoCampo.Assinatura,
+                Nome = "assiantura",
+                Rotulo = "Assinatura",
+                Obrigatorio = true,
+                ValidacaoEspecial = "assinatura"
             };
         }
     }

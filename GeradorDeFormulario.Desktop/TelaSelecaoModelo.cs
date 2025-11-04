@@ -33,7 +33,7 @@ namespace GeradorDeFormulario.Desktop
             CarregarCategorias();
             CarregarFiltrosComboBoxes();
             CarregarTodosOsModelos();
-            
+
 
             this.listBoxModelos.SelectedIndexChanged += OnFiltroChanged;
             this.txtBusca.TextChanged += OnFiltroChanged;
@@ -188,6 +188,23 @@ namespace GeradorDeFormulario.Desktop
                 this.DialogResult = DialogResult.None;
                 MessageBox.Show("Por favor, selecione um template.", "Nenhum Template Selecionado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void btnNovoEmBranco_Click(object sender, EventArgs e)
+        {
+            var formularioEmBranco = new DefinicaoFormulario();
+
+            // 2. Pré-define alguns valores (opcional, mas bom)
+            formularioEmBranco.TituloHeader = "Novo Formulário";
+            formularioEmBranco.NomeFormulario = "Novo Formulário";
+            formularioEmBranco.EstiloLayout = EstiloDeLayout.Ficheiro; // Começa como Clássico
+
+            // 3. Define este objeto em branco como o "ModeloSelecionado"
+            this.ModeloSelecionado = formularioEmBranco;
+
+            // 4. Diz ao Program.cs que o usuário clicou "OK" e fecha
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

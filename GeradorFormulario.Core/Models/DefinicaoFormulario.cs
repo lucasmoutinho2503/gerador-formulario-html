@@ -8,8 +8,21 @@ using GeradorFormulario.Core.Models;
 
 namespace GeradorFormulario.Core.Models
 {
+    public enum EstiloDeLayout
+    {
+        Classico,
+        Ficheiro
+        //Wizard,   
+        //Simples   
+    }
+
     public class DefinicaoFormulario
     {
+        [Category("Formulário")]
+        [DisplayName("Layout")]
+        [Description("O estilo visual/estrutural do formulário (Clássico, Wizard, etc.)")]
+        public EstiloDeLayout EstiloLayout { get; set; } = EstiloDeLayout.Classico;
+
         [Category("Cabeçalho")]
         [DisplayName("URL do Logo")]
         [Description("O caminho (URL ou local) para a imagem do logo.")]
@@ -54,6 +67,7 @@ namespace GeradorFormulario.Core.Models
         public DefinicaoFormulario()
         {
             Metodo = "POST";
+            EstiloLayout = EstiloDeLayout.Classico;
             Secoes = new List<SecaoFormulario>();
             Conexao = null;
             Tags = new List<string>();

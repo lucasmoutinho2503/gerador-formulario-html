@@ -15,6 +15,7 @@ namespace GeradorFormulario.Core.Enums
         AreaDeTexto,
         Selecao,
         CaixaDeSelecao,
-        Arquivo
+        Arquivo,
+        Assinatura
     }
 }

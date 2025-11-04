@@ -39,6 +39,7 @@
             btnSelecionar = new Button();
             panel1 = new Panel();
             btnCancelar = new Button();
+            btnNovoEmBranco = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -111,6 +112,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(btnNovoEmBranco);
             panel1.Controls.Add(btnCancelar);
             panel1.Location = new Point(307, 519);
             panel1.Name = "panel1";
@@ -127,6 +129,16 @@
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = true;
             // 
+            // btnNovoEmBranco
+            // 
+            btnNovoEmBranco.Location = new Point(246, 10);
+            btnNovoEmBranco.Name = "btnNovoEmBranco";
+            btnNovoEmBranco.Size = new Size(75, 23);
+            btnNovoEmBranco.TabIndex = 8;
+            btnNovoEmBranco.Text = "Novo";
+            btnNovoEmBranco.UseVisualStyleBackColor = true;
+            btnNovoEmBranco.Click += btnNovoEmBranco_Click;
+            // 
             // TelaSelecaoModelo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -140,6 +152,7 @@
             Controls.Add(txtBusca);
             Controls.Add(listBoxModelos);
             Controls.Add(panel1);
+            MaximizeBox = false;
             Name = "TelaSelecaoModelo";
             Text = "TelaSelecaoModelo";
             Load += TelaSelecaoModelo_Load;
@@ -159,5 +172,6 @@
         private Button btnSelecionar;
         private Panel panel1;
         private Button btnCancelar;
+        private Button btnNovoEmBranco;
     }
 }

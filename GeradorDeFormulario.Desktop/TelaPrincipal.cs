@@ -1,6 +1,7 @@
 using GeradorFormulario.Core;
 using GeradorFormulario.Core.Fabrica;
 using GeradorFormulario.Core.Helper;
+using GeradorFormulario.Core.Layouts;
 using GeradorFormulario.Core.Models;
 using Microsoft.Web.WebView2.WinForms;
 using Newtonsoft.Json;
@@ -41,13 +42,15 @@ namespace GeradorDeFormulario.Desktop
 
             arquivoHtmlTemporario = Path.Combine(Path.GetTempPath(), "form_preview.html");
 
-            cmbCamposDisponiveis.Items.Add("Nome Completo");
+            cmbCamposDisponiveis.Items.Add("Texto");
             cmbCamposDisponiveis.Items.Add("Email");
-            cmbCamposDisponiveis.Items.Add("CPF");
-            cmbCamposDisponiveis.Items.Add("Data de Nascimento");
-            cmbCamposDisponiveis.Items.Add("Celular");
-            cmbCamposDisponiveis.Items.Add("Arquivo");
-            cmbCamposDisponiveis.Items.Add("Estado Civil");
+            cmbCamposDisponiveis.Items.Add("Senha");
+            cmbCamposDisponiveis.Items.Add("Número");
+            cmbCamposDisponiveis.Items.Add("Área de Texto");
+            cmbCamposDisponiveis.Items.Add("Seleção");
+            cmbCamposDisponiveis.Items.Add("Caixa de Seleção");
+            cmbCamposDisponiveis.Items.Add("Envio de Arquivo");
+            cmbCamposDisponiveis.Items.Add("Assinatura");
             cmbCamposDisponiveis.SelectedIndex = 0;
 
             treeViewFormulario.Tag = definicaoFormulario; // Associa o objeto raiz
@@ -146,11 +149,15 @@ namespace GeradorDeFormulario.Desktop
                 // Adiciona o campo
                 switch (campoEscolhido)
                 {
-                    case "Nome Completo": linha.Campos.Add(FabricaCampos.CriarNomeCompleto()); break;
-                    case "CPF": linha.Campos.Add(FabricaCampos.CriarCPF()); break;
-                    case "Celular": linha.Campos.Add(FabricaCampos.CriarCelular()); break;
-                    case "Estado Civil": linha.Campos.Add(FabricaCampos.CriarEstadoCivil()); break;
+                    case "Texto": linha.Campos.Add(FabricaCampos.CriarTexto()); break;
+                    case "Email": linha.Campos.Add(FabricaCampos.CriarEmail()); break;
+                    case "Senha": linha.Campos.Add(FabricaCampos.CriarSenha()); break;
+                    case "Número": linha.Campos.Add(FabricaCampos.CriarNumero()); break;
+                    case "Área de texto": linha.Campos.Add(FabricaCampos.CriarAreaDeTexto()); break;
+                    case "Seleção": linha.Campos.Add(FabricaCampos.CriarSelecao()); break;
+                    case "Caixa de Seleção": linha.Campos.Add(FabricaCampos.CriarCaixaDeSelecao()); break;
                     case "Arquivo": linha.Campos.Add(FabricaCampos.CriarEnvioArquivo()); break;
+                    case "Assinatura": linha.Campos.Add(FabricaCampos.CriarAssinatura()); break;
                 }
 
                 AtualizarTreeView();
