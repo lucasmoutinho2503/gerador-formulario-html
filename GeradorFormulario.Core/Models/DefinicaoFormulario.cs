@@ -59,16 +59,20 @@ namespace GeradorFormulario.Core.Models
         [Category("Aparência")]
         [DisplayName("Cor Principal")]
         [Description("A cor do tema do formulário (ex: #FFA500).")]
-        public string CorPrincipal { get; set; } = "#007bff";
+        public string CorPrincipal { get; set; } = "#1D7AC3";
 
         [Browsable(false)]
         public ConexaoApi Conexao { get; set; }
+
+        [Browsable(false)]
+        public ConfiguracaoTermos Termos { get; set; }
 
         public DefinicaoFormulario()
         {
             Metodo = "POST";
             EstiloLayout = EstiloDeLayout.Classico;
             Secoes = new List<SecaoFormulario>();
+            Termos = new ConfiguracaoTermos();
             Conexao = null;
             Tags = new List<string>();
         }

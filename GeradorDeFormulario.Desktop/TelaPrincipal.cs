@@ -465,5 +465,18 @@ namespace GeradorDeFormulario.Desktop
                 }
             }
         }
+
+        private void criarTermosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (TelaEditarTermos telaEdicao = new TelaEditarTermos(definicaoFormulario.Termos))
+            {
+                if (telaEdicao.ShowDialog() == DialogResult.OK)
+                {
+                    definicaoFormulario.Termos = telaEdicao.ConfigTermos;
+
+                    AtualizarPreview();
+                }
+            }
+        }
     }
 }

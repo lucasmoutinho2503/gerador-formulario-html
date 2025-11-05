@@ -185,7 +185,35 @@ namespace GeradorFormulario.Core.Layouts
             html.AppendLine("    </form>");
             html.AppendLine("  </div>");
 
-            string scripts = GerarScriptsJavaScript(precisaScriptCpf, precisaScriptData, precisaScriptCelular, precisaScriptEmail, precisaScriptAssinatura);
+            if (definicao.Termos != null && definicao.Termos.Habilitado)
+            {
+                html.AppendLine("");
+                html.AppendLine("<div id=\"termosModalBackdrop\" class=\"modal-backdrop\">");
+                html.AppendLine("  <div class=\"modal-content\">");
+                html.AppendLine("    <div class=\"modal-header-container\">");
+                // Imagem (se houver URL)
+                if (!string.IsNullOrEmpty(definicao.Termos.UrlImagemTitulo))
+                {
+                    html.AppendLine($"      <img src=\"{definicao.Termos.UrlImagemTitulo}\" alt=\"\" class=\"modal-header-img\">");
+                }
+                html.AppendLine($"      <h2 class=\"modal-title\">{definicao.Termos.TituloModal}</h2>");
+                html.AppendLine("    </div>"); // Fim do modal-header-container
+                html.AppendLine("    <div class=\"modal-body\">");
+                // Injeta o HTML que o usuário escreveu (com <b>, <img>, etc.)
+                html.AppendLine(definicao.Termos.ConteudoHtml);
+                html.AppendLine("    </div>");
+                html.AppendLine("    <div class=\"modal-footer\">");
+                html.AppendLine($"      <p class=\"modal-confirm-text\">{definicao.Termos.MensagemConfirmacao}</p>");
+                html.AppendLine("      <div class=\"btn-container\">");
+                html.AppendLine("        <button type=\"button\" id=\"btnDiscordoTermos\" class=\"btn btn-secondary\">Discordo</button>");
+                html.AppendLine("        <button type=\"button\" id=\"btnConcordoTermos\" class=\"btn btn-primary\">Concordo e Enviar</button>");
+                html.AppendLine("      </div>"); // Fim do btn-container
+                html.AppendLine("    </div>");
+                html.AppendLine("  </div>");
+                html.AppendLine("</div>");
+            }
+
+            string scripts = GerarScriptsJavaScript(precisaScriptCpf, precisaScriptData, precisaScriptCelular, precisaScriptEmail, precisaScriptAssinatura, (definicao.Termos != null && definicao.Termos.Habilitado));
             if (!string.IsNullOrEmpty(scripts))
             {
                 html.AppendLine(scripts);
@@ -375,6 +403,102 @@ namespace GeradorFormulario.Core.Layouts
                 .btn-limpar-assinatura:hover {
                     background: #e0e0e0;
                 }
+                               
+                .modal-backdrop {
+                    display: none; /* Escondido por padrão */
+                    position: fixed; /* Fica por cima de tudo */
+                    z-index: 1000;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0,0,0,0.5); /* Fundo preto semi-transparente */
+                    justify-content: center;
+                    align-items: center;
+                }
+                .modal-backdrop.show {
+                    display: flex; /* Mostra o modal */
+                }
+
+                .modal-content {
+                    background-color: #fefefe;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                    max-width: 900px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                    animation: fadeIn 0.3s;
+                }
+                .modal-header-container {
+                    display: flex; /* Para alinhar itens lado a lado */
+                    align-items: center; /* Centraliza verticalmente */
+                    gap: 15px; /* Espaço entre a imagem e o título */
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 10px;
+                    margin-bottom: 10px; /* Espaço entre o header e o body */
+                }
+                .modal-header-img {
+                    max-width: 60px; /* Tamanho da imagem no cabeçalho */
+                    height: auto;
+                    flex-shrink: 0; /* Impede que a imagem encolha */
+                }
+
+                .modal-title {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    color: #333;
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 10px;
+                }
+
+                .modal-body {
+                    padding: 15px 0;
+                    max-height: 400px; /* Altura máxima para o texto */
+                    overflow-y: auto; /* Adiciona scroll se o texto for longo */
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                }
+                /* Estiliza imagens que o usuário adicionar */
+                .modal-body img {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+                .modal-footer {
+                    display: flex; /* USA FLEXBOX */
+                    justify-content: space-between; /* Joga os filhos (texto e botões) para os cantos */
+                    align-items: center; /* Alinha o texto e os botões verticalmente */
+                    border-top: 1px solid #eee;
+                    padding-top: 15px;
+                    margin-top: 15px; /* Adiciona espaço acima do footer */
+                }
+                .modal-confirm-text {
+                    font-size: 0.9em;
+                    color: #555;
+                    text-align: left;
+                    flex: 1; /* Permite que o texto cresça e quebre a linha */
+                    margin-right: 20px; /* Espaço entre o texto e os botões */
+                
+                }
+                .modal-footer .btn-container {
+                    flex-shrink: 0; /* Impede os botões de encolherem */
+                }
+
+                .modal-footer .btn {
+                    width: auto; /* Botões não ocupam 100% */
+                    display: inline-block;
+                    margin-left: 10px;
+                }
+                .btn-secondary { /* (Classe de botão que faltava) */
+                    background-color: #6c757d;
+                    color: white;
+                }
+                .btn-secondary:hover {
+                    background-color: #5a6268;
+                }
 
                 @media (max-width: 425px) {
                   
@@ -427,12 +551,29 @@ namespace GeradorFormulario.Core.Layouts
                     border-bottom: 2px solid {{corPrincipal}};
                     padding-bottom: 5px;
                   }
-
+                   .modal-footer {
+                    flex-direction: column; /* Empilha texto e botões no celular */
+                    align-items: stretch; /* Faz os botões ocuparem 100% */
+                    gap: 15px;
+                  }
+                   .modal-confirm-text {
+                    text-align: center; /* Centraliza o texto no celular */
+                    margin-right: 0;
+                }
+                .modal-footer .btn-container {
+                    display: flex;
+                    flex-direction: column; /* Empilha os botões */
+                    gap: 10px;
+                }
+                .modal-footer .btn {
+                    width: 100%; /* Botões ocupam 100% no celular */
+                    margin-left: 0;
+                }
                 """;
         }
-        private string GerarScriptsJavaScript(bool cpf, bool data, bool celular, bool email, bool assinatura)
+        private string GerarScriptsJavaScript(bool cpf, bool data, bool celular, bool email, bool assinatura, bool termos)
         {
-            if (!cpf && !data && !celular && !email && !assinatura)
+            if (!cpf && !data && !celular && !email && !assinatura && !termos)
                 return string.Empty;
 
             var script = new StringBuilder();
@@ -469,7 +610,10 @@ namespace GeradorFormulario.Core.Layouts
             if (assinatura)
             {
                 script.AppendLine(LogicaAssinaturaCanvas);
-                script.AppendLine(LogicaValidacaoSubmit);
+            }
+            if (assinatura || termos)
+            {
+                script.AppendLine(LogicaValidacaoSubmit(assinatura, termos));
             }
 
             script.AppendLine("});");
@@ -653,38 +797,75 @@ namespace GeradorFormulario.Core.Layouts
             document.querySelectorAll('input[data-validacao="assinatura"]').forEach(inicializarAssinatura);
         """;
 
-        private readonly string LogicaValidacaoSubmit = """
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    let formularioEhValido = true;
-                    
-                    // --- Validação de Assinatura Obrigatória ---
-                    // Encontra todos os inputs de assinatura que têm o atributo 'required'
-                    form.querySelectorAll('input[data-validacao="assinatura"][required]').forEach(input => {
-                        
-                        // Encontra o canvas (o elemento visível)
-                        const canvas = input.closest('.campo-assinatura-wrapper').querySelector('canvas');
-                        removerErro(canvas); // Limpa erros antigos (do canvas)
-                        
-                        if (input.dataset.isSigned === 'false') {
-                            // O campo oculto está vazio!
-                            formularioEhValido = false;
-                            
-                            // Mostra o erro no canvas (o elemento visível)
-                            mostrarErro(canvas, 'A assinatura é obrigatória.');
-                        }
-                    });
-                    
-                    // (Aqui você pode adicionar mais validações de 'submit' no futuro)
+        private string LogicaValidacaoSubmit(bool checarAssinatura, bool checarTermos)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("document.querySelectorAll('form').forEach(form => {");
+            sb.AppendLine("  form.addEventListener('submit', function(event) {");
 
-                    // --- Decisão Final ---
-                    if (!formularioEhValido) {
-                        event.preventDefault(); // PARA O ENVIO DO FORMULÁRIO!
-                        alert('Por favor, corrija os campos obrigatórios antes de enviar.');
-                    }
-                });
-            });
-        """;
+            // Esta flag vai parar o submit se CUMPRIR os requisitos
+            // (ex: temos que mostrar o modal)
+            bool pararEnvio = false;
+
+            // --- 1. Lógica dos Termos (TEM PRIORIDADE) ---
+            if (checarTermos)
+            {
+                sb.AppendLine("    const modal = document.getElementById('termosModalBackdrop');");
+                // Se o modal existe E ainda não foi 'concordado'
+                sb.AppendLine("    if (modal && modal.dataset.concordado !== 'true') {");
+                sb.AppendLine("        event.preventDefault(); // PARA O ENVIO");
+                sb.AppendLine("        modal.style.display = 'flex'"); // Possivel erro aqui
+        
+                sb.AppendLine("        pararEnvio = true;"); // Marca que paramos
+                sb.AppendLine("    }");
+            }
+            sb.AppendLine("    if (pararEnvio) return;"); // Se mostramos o modal, não faz mais nada
+
+            // --- 2. Lógica da Assinatura (só roda se os termos já passaram) ---
+            sb.AppendLine("    let formularioEhValido = true;");
+            if (checarAssinatura)
+            {
+                sb.AppendLine("    form.querySelectorAll('input[data-validacao=\"assinatura\"][required]').forEach(input => {");
+                sb.AppendLine("        const canvas = input.closest('.campo-assinatura-wrapper').querySelector('canvas');");
+                sb.AppendLine("        removerErro(canvas);");
+                sb.AppendLine("        if (input.dataset.isSigned === 'false') {");
+                sb.AppendLine("            formularioEhValido = false;");
+                sb.AppendLine("            mostrarErro(canvas, 'A assinatura é obrigatória.');");
+                sb.AppendLine("        }");
+                sb.AppendLine("    });");
+            }
+
+            // --- 3. Decisão Final ---
+            sb.AppendLine("    if (!formularioEhValido) {");
+            sb.AppendLine("        event.preventDefault(); // PARA O ENVIO (ex: assinatura)");
+
+            sb.AppendLine("        alert('Por favor, corrija os campos obrigatórios antes de enviar.');");
+            sb.AppendLine("    }");
+
+            sb.AppendLine("  });"); // Fim do 'submit' event
+            sb.AppendLine("});"); // Fim do 'forEach(form)'
+
+            // --- 4. Lógica dos Botões do Modal (só adiciona se checarTermos) ---
+            if (checarTermos)
+            {
+                sb.AppendLine("const modal = document.getElementById('termosModalBackdrop');");
+                sb.AppendLine("if (modal) {");
+                sb.AppendLine("  const btnDiscordo = document.getElementById('btnDiscordoTermos');");
+                sb.AppendLine("  const btnConcordo = document.getElementById('btnConcordoTermos');");
+                sb.AppendLine("  const form = document.querySelector('form');");
+
+                sb.AppendLine("  btnDiscordo.addEventListener('click', () => { modal.style.display = 'none'; });");
+
+                sb.AppendLine("  btnConcordo.addEventListener('click', () => {");
+                sb.AppendLine("      modal.style.display = 'none';");
+                sb.AppendLine("      modal.dataset.concordado = 'true';"); // Marca como 'concordado'
+                sb.AppendLine("      form.submit();"); // ENVIA O FORMULÁRIO
+                sb.AppendLine("  });");
+                sb.AppendLine("}");
+            }
+
+            return sb.ToString();
+        }
     }
 }
 
