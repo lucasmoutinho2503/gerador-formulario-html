@@ -246,24 +246,23 @@ namespace GeradorFormulario.Core.Layouts
                   margin: 20px;
                 }
 
+                /* --- 2. CABEÇALHO --- */
                 .form-header {
                   display: flex;
-                  align-items: center; /* Alinha logo e texto verticalmente */
-                  gap: 24px; /* Espaço entre o logo e o texto */
+                  align-items: center; 
+                  gap: 24px; 
                   margin-bottom: 25px;
                   padding-bottom: 20px;
-                  border-bottom: 1px solid #eee; /* Linha divisória fina */
+                  border-bottom: 1px solid #eee; 
                 }
-
                 .form-logo {
-                  flex-shrink: 0; /* Impede o logo de encolher */
+                  flex-shrink: 0; 
                 }
-
                 .form-header-text {
-                  flex: 1; /* Ocupa o espaço restante */
+                  flex: 1; 
                 }
 
-                /* --- 2. COMPONENTES (com Tema) --- */
+                /* --- 3. CONTAINER PRINCIPAL --- */
                 .form-container {
                   max-width: 900px;
                   margin: 0 auto;
@@ -272,34 +271,33 @@ namespace GeradorFormulario.Core.Layouts
                   border-radius: 8px;
                   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                 }
-                
+
+                /* --- 4. TÍTULOS E SEÇÕES --- */
                 .form-title {
-                  text-align: left; /* Alinhado à esquerda (como na imagem) */
-                  color: #333; /* Cor escura, não a principal */
+                  text-align: left; 
+                  color: #333; 
                   margin-bottom: 15px;
                   font-weight: bold;
                 }
-
                 .form-subtitle-box {
-                  background-color: {{corPrincipal}}; /* Cor principal (laranja) */
-                  color: #000; /* Texto escuro para bom contraste */
+                  background-color: {{corPrincipal}}; 
+                  color: #000; 
                   padding: 10px 15px;
                   border-radius: 4px;
                   font-size: 0.9em;
                   line-height: 1.4;
                 }
-                
                 .form-section {
                   border: 1px solid #ddd;
                   border-radius: 8px;
                   padding: 20px;
+                  padding-top: 30px; /* Mais espaço para o <legend> "pular" para cima */
                   margin-bottom: 25px;
                 }
-                
                 .form-section-title {
                   font-size: 1.2em;
                   font-weight: bold;
-                  color: {{corPrincipal}}; /* <-- MUDANÇA: Chaves duplas */
+                  color: {{corPrincipal}}; 
                   padding: 0 10px;
                   margin-top: -30px; 
                   background: #fff;
@@ -307,17 +305,16 @@ namespace GeradorFormulario.Core.Layouts
                   margin-left: 10px;
                 }
 
-                /* NOVO: Flexbox para as Linhas */
+                /* --- 5. CAMPOS E LAYOUT --- */
                 .form-row {
                   display: flex;
                   flex-wrap: wrap; 
                   gap: 16px; /* Espaçamento entre as colunas */
                 }
-
                 .form-group {
                   margin-bottom: 10px;
+                  /* A largura é controlada pelo 'style="flex: X;"' no HTML */
                 }
-                
                 .form-label {
                   display: block;
                   margin-bottom: 8px;
@@ -332,52 +329,21 @@ namespace GeradorFormulario.Core.Layouts
                   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
                 }
                 .form-control:focus {
-                  border-color: {{corPrincipal}}; /* <-- MUDANÇA: Chaves duplas */
-                  outline: none;
+                  border-color: {{corPrincipal}};
+                  outline: 0; /* Remove o outline padrão */
+                  /* Adiciona o "brilho" da cor principal (estava faltando no seu) */
+                  box-shadow: 0 0 0 0.2rem rgba( {{corRgb}}, 0.25); 
+                }
+                textarea.form-control {
+                  min-height: 120px; 
+                  resize: vertical; 
                 }
                 .checkbox-group {
                   display: flex;
                   align-items: center;
                 }
 
-                /* Botões (com Tema) */
-                .btn {
-                  width: 100%;
-                  padding: 12px;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                  font-size: 16px;
-                  font-weight: bold;
-                  text-align: center;
-                }
-                
-                .btn-primary {
-                  background-color: {{corPrincipal}}; /* <-- MUDANÇA: Chaves duplas */
-                  color: white;
-                }
-                
-                .btn-primary:hover {
-                  opacity: 0.85; /* Efeito de hover simples */
-                }
-
-                /* Estilos de Validação */
-                .form-control.invalid {
-                  border-color: #dc3545; 
-                  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-                }
-                
-                .validation-error {
-                  color: #dc3545;
-                  font-size: 0.875em;
-                  margin-top: 5px;
-                }
-
-                .campo-assinatura.invalid {
-                  border: 2px solid #dc3545; /* Borda vermelha de erro */
-                  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-                }
-
+                /* --- 6. CAMPO DE ASSINATURA --- */
                 .campo-assinatura-wrapper {
                     position: relative;
                     width: 100%;
@@ -386,7 +352,7 @@ namespace GeradorFormulario.Core.Layouts
                 }
                 .campo-assinatura {
                     width: 100%;
-                    height: 150px; /* Altura do campo */
+                    height: 150px; 
                     cursor: crosshair;
                 }
                 .btn-limpar-assinatura {
@@ -403,24 +369,65 @@ namespace GeradorFormulario.Core.Layouts
                 .btn-limpar-assinatura:hover {
                     background: #e0e0e0;
                 }
-                               
+
+                /* --- 7. BOTÕES --- */
+                .btn {
+                  width: 100%;
+                  padding: 12px;
+                  border: none;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  font-size: 16px;
+                  font-weight: bold;
+                  text-align: center;
+                }
+                .btn-primary {
+                  background-color: {{corPrincipal}};
+                  color: white;
+                }
+                .btn-primary:hover {
+                  opacity: 0.85; 
+                }
+                .btn-secondary {
+                    background-color: #6c757d;
+                    color: white;
+                }
+                .btn-secondary:hover {
+                    background-color: #5a6268;
+                }
+
+                /* --- 8. VALIDAÇÃO DE ERRO --- */
+                .form-control.invalid {
+                  border-color: #dc3545; 
+                  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+                }
+                .campo-assinatura.invalid {
+                  border: 2px solid #dc3545; /* Borda vermelha de erro */
+                  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+                }
+                .validation-error {
+                  color: #dc3545;
+                  font-size: 0.875em;
+                  margin-top: 5px;
+                }
+        
+                /* --- 9. MODAL DE TERMOS --- */
                 .modal-backdrop {
-                    display: none; /* Escondido por padrão */
-                    position: fixed; /* Fica por cima de tudo */
+                    display: none; 
+                    position: fixed; 
                     z-index: 1000;
                     left: 0;
                     top: 0;
                     width: 100%;
                     height: 100%;
                     overflow: auto;
-                    background-color: rgba(0,0,0,0.5); /* Fundo preto semi-transparente */
+                    background-color: rgba(0,0,0,0.5); 
                     justify-content: center;
                     align-items: center;
                 }
                 .modal-backdrop.show {
-                    display: flex; /* Mostra o modal */
+                    display: flex; 
                 }
-
                 .modal-content {
                     background-color: #fefefe;
                     margin: auto;
@@ -433,141 +440,135 @@ namespace GeradorFormulario.Core.Layouts
                     animation: fadeIn 0.3s;
                 }
                 .modal-header-container {
-                    display: flex; /* Para alinhar itens lado a lado */
-                    align-items: center; /* Centraliza verticalmente */
-                    gap: 15px; /* Espaço entre a imagem e o título */
+                    display: flex; 
+                    align-items: center; 
+                    gap: 15px; 
                     border-bottom: 1px solid #eee;
                     padding-bottom: 10px;
-                    margin-bottom: 10px; /* Espaço entre o header e o body */
+                    margin-bottom: 10px; 
                 }
                 .modal-header-img {
-                    max-width: 60px; /* Tamanho da imagem no cabeçalho */
+                    max-width: 60px; 
                     height: auto;
-                    flex-shrink: 0; /* Impede que a imagem encolha */
+                    flex-shrink: 0; 
                 }
-
                 .modal-title {
                     font-size: 1.5em;
                     font-weight: bold;
                     color: #333;
-                    border-bottom: 1px solid #eee;
-                    padding-bottom: 10px;
+                    /* Limpo (a borda está no container) */
+                    border-bottom: none;
+                    padding-bottom: 0;
                 }
-
                 .modal-body {
                     padding: 15px 0;
-                    max-height: 400px; /* Altura máxima para o texto */
-                    overflow-y: auto; /* Adiciona scroll se o texto for longo */
+                    max-height: 400px; 
+                    overflow-y: auto; 
                     overflow-wrap: break-word;
                     word-wrap: break-word;
                 }
-                /* Estiliza imagens que o usuário adicionar */
                 .modal-body img {
                     max-width: 100%;
                     height: auto;
                 }
-
                 .modal-footer {
-                    display: flex; /* USA FLEXBOX */
-                    justify-content: space-between; /* Joga os filhos (texto e botões) para os cantos */
-                    align-items: center; /* Alinha o texto e os botões verticalmente */
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: center; 
                     border-top: 1px solid #eee;
                     padding-top: 15px;
-                    margin-top: 15px; /* Adiciona espaço acima do footer */
+                    margin-top: 15px; 
                 }
                 .modal-confirm-text {
                     font-size: 0.9em;
                     color: #555;
                     text-align: left;
-                    flex: 1; /* Permite que o texto cresça e quebre a linha */
-                    margin-right: 20px; /* Espaço entre o texto e os botões */
-                
+                    flex: 1; 
+                    margin-right: 20px; 
                 }
                 .modal-footer .btn-container {
-                    flex-shrink: 0; /* Impede os botões de encolherem */
+                    flex-shrink: 0; 
                 }
-
                 .modal-footer .btn {
-                    width: auto; /* Botões não ocupam 100% */
+                    width: auto; 
                     display: inline-block;
                     margin-left: 10px;
                 }
-                .btn-secondary { /* (Classe de botão que faltava) */
-                    background-color: #6c757d;
-                    color: white;
-                }
-                .btn-secondary:hover {
-                    background-color: #5a6268;
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
                 }
 
-                @media (max-width: 425px) {
-                  
+
+                /* --- 10. RESPONSIVIDADE (PONTO DE QUEBRA CORRIGIDO) --- */
+        
+                /* MUDANÇA: de 425px para 768px */
+                @media (max-width: 768px) {
+          
                   body {
-                    margin: 0; /* Remove margens no celular */
+                    margin: 0; 
                   }
-
                   .form-container {
-                    padding: 15px; /* Padding menor */
+                    padding: 15px; 
                     border-radius: 0;
                     box-shadow: none;
+                    max-width: 100%; /* Ocupa a tela toda */
                   }
 
-                  /* Empilha o cabeçalho no celular */
+                  /* Empilha o cabeçalho */
                   .form-header {
-                    flex-direction: column; /* Empilha o logo e o texto */
-                    align-items: center;    /* Centraliza */
+                    flex-direction: column; 
+                    align-items: center;   
                     gap: 15px;
                   }
-
                   .form-title {
-                    text-align: center; /* Centraliza o título no celular */
+                    text-align: center; 
                   }
-                  
                   .form-subtitle-box {
                     text-align: center;
                   }
 
-                  /* Empilha as colunas (CPF/RG, Bairro/Cidade/CEP) */
+                  /* Empilha as colunas */
                   .form-row {
-                    flex-direction: column; /* Empilha os campos */
-                    gap: 0; /* Remove o gap, já que estão um sobre o outro */
+                    flex-direction: column; 
+                    gap: 0; 
                   }
-                  
-                  /* O 'style="flex: X;"' não afeta a direção de coluna, 
-                     então os campos naturalmente ocupam 100% da largura. */
-
+          
                   /* Ajuste no título da seção para mobile */
                   .form-section {
                     padding: 20px 15px;
                   }
-                  
                   .form-section-title {
                     margin-top: 0;
                     margin-left: 0;
                     margin-bottom: 20px;
-                    display: block; /* Vira um bloco normal */
+                    display: block; 
                     width: 100%;
                     background: transparent;
                     border-bottom: 2px solid {{corPrincipal}};
                     padding-bottom: 5px;
                   }
-                   .modal-footer {
-                    flex-direction: column; /* Empilha texto e botões no celular */
-                    align-items: stretch; /* Faz os botões ocuparem 100% */
+          
+                  /* Empilha o footer do modal */
+                  .modal-footer {
+                    flex-direction: column; 
+                    align-items: stretch; 
                     gap: 15px;
                   }
-                   .modal-confirm-text {
-                    text-align: center; /* Centraliza o texto no celular */
+                  .modal-confirm-text {
+                    text-align: center; 
                     margin-right: 0;
-                }
-                .modal-footer .btn-container {
+                  }
+                  .modal-footer .btn-container {
                     display: flex;
-                    flex-direction: column; /* Empilha os botões */
+                    flex-direction: column; 
                     gap: 10px;
-                }
-                .modal-footer .btn {
-                    width: 100%; /* Botões ocupam 100% no celular */
+                  }
+                  .modal-footer .btn {
+                    width: 100%; 
                     margin-left: 0;
+                  }
                 }
                 """;
         }

@@ -49,7 +49,7 @@ namespace GeradorDeFormulario.Desktop
             cmbCamposDisponiveis.Items.Add("Área de Texto");
             cmbCamposDisponiveis.Items.Add("Seleção");
             cmbCamposDisponiveis.Items.Add("Caixa de Seleção");
-            cmbCamposDisponiveis.Items.Add("Envio de Arquivo");
+            cmbCamposDisponiveis.Items.Add("Arquivo");
             cmbCamposDisponiveis.Items.Add("Assinatura");
             cmbCamposDisponiveis.SelectedIndex = 0;
 
@@ -138,14 +138,6 @@ namespace GeradorDeFormulario.Desktop
             {
                 string campoEscolhido = cmbCamposDisponiveis.SelectedItem.ToString();
 
-                // Lógica especial para o componente de endereço
-                if (campoEscolhido == "Linha Endereço (B/C/C)")
-                {
-                    // Esse componente já é uma linha, não um campo
-                    MessageBox.Show("Este item é especial. Use 'Adicionar Linha' e selecione uma Seção.");
-                    return;
-                }
-
                 // Adiciona o campo
                 switch (campoEscolhido)
                 {
@@ -153,7 +145,7 @@ namespace GeradorDeFormulario.Desktop
                     case "Email": linha.Campos.Add(FabricaCampos.CriarEmail()); break;
                     case "Senha": linha.Campos.Add(FabricaCampos.CriarSenha()); break;
                     case "Número": linha.Campos.Add(FabricaCampos.CriarNumero()); break;
-                    case "Área de texto": linha.Campos.Add(FabricaCampos.CriarAreaDeTexto()); break;
+                    case "Área de Texto": linha.Campos.Add(FabricaCampos.CriarAreaDeTexto()); break;
                     case "Seleção": linha.Campos.Add(FabricaCampos.CriarSelecao()); break;
                     case "Caixa de Seleção": linha.Campos.Add(FabricaCampos.CriarCaixaDeSelecao()); break;
                     case "Arquivo": linha.Campos.Add(FabricaCampos.CriarEnvioArquivo()); break;
