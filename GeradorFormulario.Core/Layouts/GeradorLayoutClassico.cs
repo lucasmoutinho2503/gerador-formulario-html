@@ -818,25 +818,29 @@ namespace GeradorFormulario.Core.Layouts
             document.querySelectorAll('input[data-validacao="assinatura"]').forEach(inicializarAssinatura);
         """;
 
+        // (Substitua este método em AMBOS os seus arquivos de layout)
+        // (Substitua este método no seu GeradorLayoutClassico.cs)
         private string LogicaValidacaoSubmit(bool checarAssinatura, bool checarTermos)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("document.querySelectorAll('form').forEach(form => {");
-            sb.AppendLine("  form.addEventListener('submit', function(event) {");
-            sb.AppendLine("    event.preventDefault(); // <-- 1. SEMPRE impede o envio padrão");
 
-            // --- Lógica dos Termos (Prioridade 1) ---
+            // --- 1. FUNÇÃO DE ENVIO COMPLETA ---
+            // Nós definimos a função de envio UMA VEZ.
+            // Ela faz tudo: valida termos, assinatura e envia com fetch
+            sb.AppendLine("function processarEnvio(form) {");
+            sb.AppendLine("    let formularioEhValido = true;");
+
+            // --- 2. Lógica dos Termos (Prioridade 1) ---
             if (checarTermos)
             {
                 sb.AppendLine("    const modal = document.getElementById('termosModalBackdrop');");
                 sb.AppendLine("    if (modal && modal.dataset.concordado !== 'true') {");
-                sb.AppendLine("        modal.style.display = 'flex';"); // Adicionado ';' (apesar de opcional, é boa prática)
-                sb.AppendLine("        return;"); // Para o script aqui. Não valida nem envia.
+                sb.AppendLine("        modal.style.display = 'flex';");
+                sb.AppendLine("        return;"); // Para. Não valida assinatura, não envia.
                 sb.AppendLine("    }");
             }
 
-            // --- Lógica da Validação (Prioridade 2) ---
-            sb.AppendLine("    let formularioEhValido = true;");
+            // --- 3. Lógica da Assinatura (Prioridade 2) ---
             if (checarAssinatura)
             {
                 sb.AppendLine("    form.querySelectorAll('input[data-validacao=\"assinatura\"][required]').forEach(input => {");
@@ -849,19 +853,20 @@ namespace GeradorFormulario.Core.Layouts
                 sb.AppendLine("    });");
             }
 
-            // --- Decisão da Validação ---
+            // --- 4. Decisão da Validação (Prioridade 3) ---
             sb.AppendLine("    if (!formularioEhValido) {");
             sb.AppendLine("        alert('Por favor, corrija os campos obrigatórios antes de enviar.');");
-            sb.AppendLine("        return;"); // Para o script aqui. Não envia.
+            sb.AppendLine("        return;"); // Para. Não envia.
             sb.AppendLine("    }");
 
+            // --- 5. Verificação da Ação da API (Prioridade 4) ---
             sb.AppendLine("    if (!form.action || form.action === window.location.href) {");
             sb.AppendLine("        alert('Erro de Configuração: O formulário não tem uma URL de destino (API) definida.');");
-            sb.AppendLine("        return; // Para o script aqui");
+            sb.AppendLine("        return;");
             sb.AppendLine("    }");
 
-            // --- LÓGICA DE ENVIO (Prioridade 3) ---
-            // (Este bloco foi MOVIDO para DENTRO do 'submit' listener)
+            // --- 6. ENVIO COM FETCH (Prioridade 5: Se tudo estiver OK) ---
+            // (Este bloco agora está CORRETAMENTE DENTRO de processarEnvio)
             sb.AppendLine("    const formData = new FormData(form);");
             sb.AppendLine("    fetch(form.action, {");
             sb.AppendLine("        method: form.method,");
@@ -870,8 +875,7 @@ namespace GeradorFormulario.Core.Layouts
             sb.AppendLine("    })");
             sb.AppendLine("    .then(response => {");
             sb.AppendLine("        if (response.ok) {");
-            // Correção do nome do arquivo
-            sb.AppendLine("            window.location.href = 'confirmacao.html';");
+            sb.AppendLine("            window.location.href = 'confirmacao.html';"); // Redireciona
             sb.AppendLine("        } else {");
             sb.AppendLine("            return response.json().then(err => { throw new Error(err.message || 'Erro desconhecido'); });");
             sb.AppendLine("        }");
@@ -879,12 +883,20 @@ namespace GeradorFormulario.Core.Layouts
             sb.AppendLine("    .catch(error => {");
             sb.AppendLine("        alert('Ocorreu um erro ao enviar o formulário: ' + error.message);");
             sb.AppendLine("    });");
-            // (Fim do bloco movido)
+            sb.AppendLine("}"); // --- Fim da função processarEnvio ---
 
-            sb.AppendLine("  });"); // Fim do 'submit' event
-            sb.AppendLine("});"); // Fim do 'forEach(form)'
 
-            // --- Lógica dos Botões do Modal (Separado) ---
+            // --- 7. LIGAÇÃO DOS EVENTOS ---
+
+            // Liga o evento 'submit' (do botão "Enviar" principal)
+            sb.AppendLine("document.querySelectorAll('form').forEach(form => {");
+            sb.AppendLine("  form.addEventListener('submit', function(event) {");
+            sb.AppendLine("    event.preventDefault(); // <-- Impede o envio padrão");
+            sb.AppendLine("    processarEnvio(form);   // <-- Chama nossa função de envio");
+            sb.AppendLine("  });");
+            sb.AppendLine("});");
+
+            // Liga os eventos dos botões do Modal (se ele existir)
             if (checarTermos)
             {
                 sb.AppendLine("const modal = document.getElementById('termosModalBackdrop');");
@@ -898,9 +910,11 @@ namespace GeradorFormulario.Core.Layouts
                 sb.AppendLine("  btnConcordo.addEventListener('click', () => {");
                 sb.AppendLine("      modal.style.display = 'none';");
                 sb.AppendLine("      modal.dataset.concordado = 'true';");
-                // CORREÇÃO: Usa requestSubmit() para re-disparar o evento 'submit'
-                // (o que faz nossa validação rodar de novo)
-                sb.AppendLine("      form.requestSubmit();");
+
+                // CORREÇÃO: Chama a função de envio DIRETAMENTE
+                // (Isso substitui o 'form.submit()' ou 'form.requestSubmit()')
+                sb.AppendLine("      processarEnvio(form);");
+
                 sb.AppendLine("  });");
                 sb.AppendLine("}");
             }
