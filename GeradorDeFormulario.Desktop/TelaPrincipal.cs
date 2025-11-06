@@ -445,6 +445,20 @@ namespace GeradorDeFormulario.Desktop
                     string caminhoHtml = Path.Combine(pastaRaizProjeto, "index.html");
                     File.WriteAllText(caminhoHtml, htmlFinal);
 
+                    if (definicaoFormulario.Confirmacao.Habilitado)
+                    {
+                        IGeradorLayout layoutGerador;
+                        if (definicaoFormulario.EstiloLayout == EstiloDeLayout.Classico)
+                            layoutGerador = new GeradorFormulario.Core.Layouts.GeradorLayoutClassico();
+                        else 
+                            layoutGerador = new GeradorFormulario.Core.Layouts.GeradorLayoutFicheiro();
+
+                        // (Isso assume que 'GerarHtmlConfirmacao' foi adicionado a IGeradorLayout)
+                        string htmlObrigado = layoutGerador.GerarHtmlConfirmacao(definicaoFormulario);
+                        string caminhoObrigado = Path.Combine(pastaRaizProjeto, "confirmacao.html");
+                        File.WriteAllText(caminhoObrigado, htmlObrigado);
+                    }
+
                     AtualizarPreview();
                     propertyGridItem.Refresh();
                 }
@@ -465,6 +479,19 @@ namespace GeradorDeFormulario.Desktop
                 if (telaEdicao.ShowDialog() == DialogResult.OK)
                 {
                     definicaoFormulario.Termos = telaEdicao.ConfigTermos;
+
+                    AtualizarPreview();
+                }
+            }
+        }
+
+        private void telaDeConfirmaçãoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (TelaEditarConfirmacao telaConfirmacao = new TelaEditarConfirmacao(definicaoFormulario.Confirmacao))
+            {
+                if (telaConfirmacao.ShowDialog() == DialogResult.OK)
+                {
+
 
                     AtualizarPreview();
                 }

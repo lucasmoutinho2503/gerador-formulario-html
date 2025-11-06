@@ -14,7 +14,10 @@ namespace GeradorFormulario.Core.Layouts
     public class GeradorLayoutFicheiro : IGeradorLayout
     {
         // --- MÉTODO PRINCIPAL DA INTERFACE ---
-
+        public string GerarHtmlConfirmacao(DefinicaoFormulario definicao)
+        {
+            return "";
+        }
         public string GerarHtml(DefinicaoFormulario definicao)
         {
             StringBuilder html = new StringBuilder();

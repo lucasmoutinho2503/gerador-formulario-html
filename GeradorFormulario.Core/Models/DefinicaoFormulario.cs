@@ -12,8 +12,6 @@ namespace GeradorFormulario.Core.Models
     {
         Classico,
         Ficheiro
-        //Wizard,   
-        //Simples   
     }
 
     public class DefinicaoFormulario
@@ -61,11 +59,19 @@ namespace GeradorFormulario.Core.Models
         [Description("A cor do tema do formulário (ex: #FFA500).")]
         public string CorPrincipal { get; set; } = "#1D7AC3";
 
+        [Category("Rodapé")]
+        [DisplayName("Texto do Rodapé")]
+        [Description("Texto que aparece no final do formulário (ex: © 2025 Empresa XYZ).")]
+        public string TextoRodape { get; set; }
+
         [Browsable(false)]
         public ConexaoApi Conexao { get; set; }
 
         [Browsable(false)]
         public ConfiguracaoTermos Termos { get; set; }
+
+        [Browsable(false)] 
+        public PaginaConfirmacao Confirmacao { get; set; }
 
         public DefinicaoFormulario()
         {
@@ -73,8 +79,10 @@ namespace GeradorFormulario.Core.Models
             EstiloLayout = EstiloDeLayout.Classico;
             Secoes = new List<SecaoFormulario>();
             Termos = new ConfiguracaoTermos();
+            Confirmacao = new PaginaConfirmacao();
             Conexao = null;
             Tags = new List<string>();
+            TextoRodape = "";
         }
     }
 }

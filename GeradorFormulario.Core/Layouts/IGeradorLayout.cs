@@ -10,5 +10,6 @@ namespace GeradorFormulario.Core.Layouts
     public interface IGeradorLayout
     {
         string GerarHtml(DefinicaoFormulario definicao);
+        string GerarHtmlConfirmacao(DefinicaoFormulario definicao);
     }
 }

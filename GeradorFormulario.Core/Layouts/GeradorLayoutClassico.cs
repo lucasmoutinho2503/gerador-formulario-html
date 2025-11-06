@@ -182,6 +182,14 @@ namespace GeradorFormulario.Core.Layouts
             }
 
             html.AppendLine("      <div class=\"form-group\"><button type='submit' class=\"btn btn-primary\">Enviar</button></div>");
+            
+            //Rodapé
+            if (!string.IsNullOrEmpty(definicao.TextoRodape))
+            {
+                html.AppendLine("      <div class=\"form-footer\">");
+                html.AppendLine($"        <p>{definicao.TextoRodape.Replace("\n", "<br />")}</p>");
+                html.AppendLine("      </div>");
+            }
             html.AppendLine("    </form>");
             html.AppendLine("  </div>");
 
@@ -409,6 +417,18 @@ namespace GeradorFormulario.Core.Layouts
                   color: #dc3545;
                   font-size: 0.875em;
                   margin-top: 5px;
+                }
+                .form-footer {
+                  text-align: center;
+                  font-size: 0.9em;
+                  color: #888; /* Cor cinza sutil */
+                  margin-top: 30px;
+                  padding-top: 20px;
+                  border-top: 1px solid #eee; /* Linha divisória fina */
+                }
+                .form-footer p {
+                  margin: 0;
+                  line-height: 1.5;
                 }
         
                 /* --- 9. MODAL DE TERMOS --- */
@@ -803,26 +823,19 @@ namespace GeradorFormulario.Core.Layouts
             var sb = new StringBuilder();
             sb.AppendLine("document.querySelectorAll('form').forEach(form => {");
             sb.AppendLine("  form.addEventListener('submit', function(event) {");
+            sb.AppendLine("    event.preventDefault(); // <-- 1. SEMPRE impede o envio padrão");
 
-            // Esta flag vai parar o submit se CUMPRIR os requisitos
-            // (ex: temos que mostrar o modal)
-            bool pararEnvio = false;
-
-            // --- 1. Lógica dos Termos (TEM PRIORIDADE) ---
+            // --- Lógica dos Termos (Prioridade 1) ---
             if (checarTermos)
             {
                 sb.AppendLine("    const modal = document.getElementById('termosModalBackdrop');");
-                // Se o modal existe E ainda não foi 'concordado'
                 sb.AppendLine("    if (modal && modal.dataset.concordado !== 'true') {");
-                sb.AppendLine("        event.preventDefault(); // PARA O ENVIO");
-                sb.AppendLine("        modal.style.display = 'flex'"); // Possivel erro aqui
-        
-                sb.AppendLine("        pararEnvio = true;"); // Marca que paramos
+                sb.AppendLine("        modal.style.display = 'flex';"); // Adicionado ';' (apesar de opcional, é boa prática)
+                sb.AppendLine("        return;"); // Para o script aqui. Não valida nem envia.
                 sb.AppendLine("    }");
             }
-            sb.AppendLine("    if (pararEnvio) return;"); // Se mostramos o modal, não faz mais nada
 
-            // --- 2. Lógica da Assinatura (só roda se os termos já passaram) ---
+            // --- Lógica da Validação (Prioridade 2) ---
             sb.AppendLine("    let formularioEhValido = true;");
             if (checarAssinatura)
             {
@@ -836,17 +849,42 @@ namespace GeradorFormulario.Core.Layouts
                 sb.AppendLine("    });");
             }
 
-            // --- 3. Decisão Final ---
+            // --- Decisão da Validação ---
             sb.AppendLine("    if (!formularioEhValido) {");
-            sb.AppendLine("        event.preventDefault(); // PARA O ENVIO (ex: assinatura)");
-
             sb.AppendLine("        alert('Por favor, corrija os campos obrigatórios antes de enviar.');");
+            sb.AppendLine("        return;"); // Para o script aqui. Não envia.
             sb.AppendLine("    }");
+
+            sb.AppendLine("    if (!form.action || form.action === window.location.href) {");
+            sb.AppendLine("        alert('Erro de Configuração: O formulário não tem uma URL de destino (API) definida.');");
+            sb.AppendLine("        return; // Para o script aqui");
+            sb.AppendLine("    }");
+
+            // --- LÓGICA DE ENVIO (Prioridade 3) ---
+            // (Este bloco foi MOVIDO para DENTRO do 'submit' listener)
+            sb.AppendLine("    const formData = new FormData(form);");
+            sb.AppendLine("    fetch(form.action, {");
+            sb.AppendLine("        method: form.method,");
+            sb.AppendLine("        body: formData,");
+            sb.AppendLine("        headers: { 'Accept': 'application/json' }");
+            sb.AppendLine("    })");
+            sb.AppendLine("    .then(response => {");
+            sb.AppendLine("        if (response.ok) {");
+            // Correção do nome do arquivo
+            sb.AppendLine("            window.location.href = 'confirmacao.html';");
+            sb.AppendLine("        } else {");
+            sb.AppendLine("            return response.json().then(err => { throw new Error(err.message || 'Erro desconhecido'); });");
+            sb.AppendLine("        }");
+            sb.AppendLine("    })");
+            sb.AppendLine("    .catch(error => {");
+            sb.AppendLine("        alert('Ocorreu um erro ao enviar o formulário: ' + error.message);");
+            sb.AppendLine("    });");
+            // (Fim do bloco movido)
 
             sb.AppendLine("  });"); // Fim do 'submit' event
             sb.AppendLine("});"); // Fim do 'forEach(form)'
 
-            // --- 4. Lógica dos Botões do Modal (só adiciona se checarTermos) ---
+            // --- Lógica dos Botões do Modal (Separado) ---
             if (checarTermos)
             {
                 sb.AppendLine("const modal = document.getElementById('termosModalBackdrop');");
@@ -859,13 +897,46 @@ namespace GeradorFormulario.Core.Layouts
 
                 sb.AppendLine("  btnConcordo.addEventListener('click', () => {");
                 sb.AppendLine("      modal.style.display = 'none';");
-                sb.AppendLine("      modal.dataset.concordado = 'true';"); // Marca como 'concordado'
-                sb.AppendLine("      form.submit();"); // ENVIA O FORMULÁRIO
+                sb.AppendLine("      modal.dataset.concordado = 'true';");
+                // CORREÇÃO: Usa requestSubmit() para re-disparar o evento 'submit'
+                // (o que faz nossa validação rodar de novo)
+                sb.AppendLine("      form.requestSubmit();");
                 sb.AppendLine("  });");
                 sb.AppendLine("}");
             }
 
             return sb.ToString();
+        }
+
+        public string GerarHtmlConfirmacao(DefinicaoFormulario definicao)
+        {
+            var config = definicao.Confirmacao;
+            var corPrincipal = definicao.CorPrincipal; // Reusa a cor do tema
+
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<!DOCTYPE html><html lang=\"pt-br\"><head>");
+            html.AppendLine("  <meta charset=\"UTF-8\">");
+            html.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+            html.AppendLine($"  <title>{config.TituloPagina}</title>");
+            html.AppendLine("  <style>");
+            // CSS Simples para a página de "confirmacao"
+            html.AppendLine($$"""
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+                .confirm-box { background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 600px; text-align: center; }
+                .confirm-box h1 { color: {{corPrincipal}}; }
+                .confirm-box p { color: #333; line-height: 1.6; }
+                .confirm-box a { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: {{corPrincipal}}; color: white; text-decoration: none; border-radius: 4px; }
+            """);
+            html.AppendLine("  </style>");
+            html.AppendLine("</head><body>");
+            html.AppendLine("  <div class=\"confirm-box\">");
+            // Injeta o HTML que o usuário escreveu
+            html.AppendLine(config.ConteudoHtml);
+            html.AppendLine("    <a href=\"javascript:history.back()\">Voltar</a>");
+            html.AppendLine("  </div>");
+            html.AppendLine("</body></html>");
+
+            return html.ToString();
         }
     }
 }

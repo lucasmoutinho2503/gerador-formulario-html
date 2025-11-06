@@ -36,6 +36,8 @@
             salvarModeloToolStripMenuItem = new ToolStripMenuItem();
             carregarModeloToolStripMenuItem = new ToolStripMenuItem();
             conexãoToolStripMenuItem = new ToolStripMenuItem();
+            termosDeUsoToolStripMenuItem = new ToolStripMenuItem();
+            criarTermosToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             tabControlEditor = new TabControl();
             tabPropriedades = new TabPage();
@@ -59,8 +61,7 @@
             dialogoAbrirModelo = new OpenFileDialog();
             dialogoSalvarModelo = new SaveFileDialog();
             dialogoSelecionarPasta = new FolderBrowserDialog();
-            termosDeUsoToolStripMenuItem = new ToolStripMenuItem();
-            criarTermosToolStripMenuItem = new ToolStripMenuItem();
+            telaDeConfirmaçãoToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -78,7 +79,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { arquivoToolStripMenuItem, conexãoToolStripMenuItem, termosDeUsoToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { arquivoToolStripMenuItem, conexãoToolStripMenuItem, termosDeUsoToolStripMenuItem, telaDeConfirmaçãoToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1058, 24);
@@ -133,6 +134,20 @@
             conexãoToolStripMenuItem.Size = new Size(66, 20);
             conexãoToolStripMenuItem.Text = "Conexão";
             conexãoToolStripMenuItem.Click += conexãoToolStripMenuItem_Click;
+            // 
+            // termosDeUsoToolStripMenuItem
+            // 
+            termosDeUsoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { criarTermosToolStripMenuItem });
+            termosDeUsoToolStripMenuItem.Name = "termosDeUsoToolStripMenuItem";
+            termosDeUsoToolStripMenuItem.Size = new Size(96, 20);
+            termosDeUsoToolStripMenuItem.Text = "Termos de Uso";
+            // 
+            // criarTermosToolStripMenuItem
+            // 
+            criarTermosToolStripMenuItem.Name = "criarTermosToolStripMenuItem";
+            criarTermosToolStripMenuItem.Size = new Size(140, 22);
+            criarTermosToolStripMenuItem.Text = "Criar Termos";
+            criarTermosToolStripMenuItem.Click += criarTermosToolStripMenuItem_Click;
             // 
             // splitContainer1
             // 
@@ -341,19 +356,12 @@
             // 
             dialogoAbrirModelo.FileName = "openFileDialog1";
             // 
-            // termosDeUsoToolStripMenuItem
+            // telaDeConfirmaçãoToolStripMenuItem
             // 
-            termosDeUsoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { criarTermosToolStripMenuItem });
-            termosDeUsoToolStripMenuItem.Name = "termosDeUsoToolStripMenuItem";
-            termosDeUsoToolStripMenuItem.Size = new Size(96, 20);
-            termosDeUsoToolStripMenuItem.Text = "Termos de Uso";
-            // 
-            // criarTermosToolStripMenuItem
-            // 
-            criarTermosToolStripMenuItem.Name = "criarTermosToolStripMenuItem";
-            criarTermosToolStripMenuItem.Size = new Size(180, 22);
-            criarTermosToolStripMenuItem.Text = "Criar Termos";
-            criarTermosToolStripMenuItem.Click += criarTermosToolStripMenuItem_Click;
+            telaDeConfirmaçãoToolStripMenuItem.Name = "telaDeConfirmaçãoToolStripMenuItem";
+            telaDeConfirmaçãoToolStripMenuItem.Size = new Size(127, 20);
+            telaDeConfirmaçãoToolStripMenuItem.Text = "Tela de Confirmação";
+            telaDeConfirmaçãoToolStripMenuItem.Click += telaDeConfirmaçãoToolStripMenuItem_Click;
             // 
             // TelaPrincipal
             // 
@@ -422,5 +430,6 @@
         private FolderBrowserDialog dialogoSelecionarPasta;
         private ToolStripMenuItem termosDeUsoToolStripMenuItem;
         private ToolStripMenuItem criarTermosToolStripMenuItem;
+        private ToolStripMenuItem telaDeConfirmaçãoToolStripMenuItem;
     }
 }
